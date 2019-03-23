@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% block head %}
+<title>
+      Edit your profile
+</title>
+{% endblock head %}
+{% load crispy_forms_tags %}
+{% block css %}
+{{ block.super }}
+<style>
+#id_picture {
+  width: 70%;
+}
+#id_picture::-webkit-file-upload-button{
+  color: aqua;
+  background-color: rgb(52, 50, 51);
+  transition: all 0.1s ease;
+  cursor: pointer;
+  border-color: aqua;
+  border-radius: 100px;
+  background: none;
+  font-family: Sitefont-medium;
+  font-size: 15px;
+  padding: 1px 3px;
+  width: 110px;
+}
+#Submit{
+  color: aqua;
+  background-color: rgb(52, 50, 51);
+  transition: all 0.1s ease;
+  cursor: pointer;
+  width: 30%;
+  border-color: aqua;
+  border-radius: 100px;
+  background: none;
+  font-family: Sitefont-medium;
+  font-size: 15px;
+  padding: 7px;
+  margin-top: 10px;
+}
+#Submit:hover{
+  color: rgb(52, 50, 51);
+  background-color: aqua;
+  transition: all 0.1s ease;
+}
+#div_id_picture{
+  font-size: 18px;
+  text-align: justify;
+  background: rgba(0,0,0, 0.2);
+  padding-top:15px ;
+  border-radius: 0px 0px 10px 10px;
+}
+</style>
+{% endblock css %}
+{% block content %}
+<div class="sidepad" style="width:33%;margin-top:80px;padding:10px;float: left;"></div>
+<div class="sidepad" style="width:33%;margin-top:80px;padding:10px;float: right;"></div>
+<div class="centercontent" style="width:34%;max-width:1400px;margin-top:-80px;padding:10px;float: right;">
+  <h1>Edit Your Profile</h1>
+  <br>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ user_form|crispy}}
+    {{ profile_form|crispy }}<br>
+    Interests: <input type="text" name="interests" value="{% for int in interest_list %}{{ int }},{% endfor %}" size='120px'><br><br>
+    <center><button type="submit" id="Submit">Submit</button></center>
+  </form>
+  <br>
+</div>
+{% endblock %}

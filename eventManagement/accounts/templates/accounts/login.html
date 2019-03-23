@@ -1,0 +1,21 @@
+{#{% extends 'base.html' %}#}
+{% load crispy_forms_tags %}
+{% block head %}
+<title>
+      Login
+</title>
+{% endblock head %}
+
+{% block title %}
+Login to Circlr
+{% endblock title %}
+
+{% block content %}
+    <center>
+  <h1>Log in</h1>
+  <form action="{% url 'accounts:login' %}" method="post">
+    {% csrf_token %}
+    {{ form }}
+    <input type="submit" value="Login" id="Submit"></center>
+  </form>
+{% endblock %}

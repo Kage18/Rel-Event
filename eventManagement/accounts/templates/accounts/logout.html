@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block head %}
+<title>
+      Logout
+</title>
+{% endblock head %}
+{% block content %}
+<div class="sidepad" style="width:33%;margin-top:80px;padding:10px;float: left;"></div>
+<div class="sidepad" style="width:33%;margin-top:80px;padding:10px;float: right;"></div>
+<div class="centercontent" style="width:34%;max-width:1400px;margin-top:20px;padding:10px;float: right;">
+    <h1>Logged out</h1>
+    <p>
+        You have logged out!
+    </p>
+    <p>
+        <a href="{% url 'accounts:login'%}">Login again?</a>
+    </p>
+</div>
+{% endblock %}

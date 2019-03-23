@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% block head %}
+<title>
+      Settings
+</title>
+{% endblock head %}
+{% block css %}
+{{block.super}}
+<style>
+      #Submit{
+            color: aqua;
+            background-color: rgb(52, 50, 51);
+            transition: all 0.1s ease;
+            cursor: pointer;
+            width: 50%;
+            border-color: aqua;
+            border-radius: 100px;
+            background: none;
+            font-family: Sitefont-medium;
+            font-size: 15px;
+            padding: 7px;
+            margin-bottom: 20px;
+      }
+      #Submit:hover{
+            color: rgb(52, 50, 51);
+            background-color: aqua;
+            transition: all 0.1s ease;
+      }
+      h1{
+          font-size: 50px;
+      }
+</style>
+{% endblock css %}
+{% block content %}
+<div class="sidepad" style="width:33%;margin-top:80px;padding:10px;float: left;"></div>
+<div class="sidepad" style="width:33%;margin-top:80px;padding:10px;float: right;"></div>
+<div class="centercontent" style="width:34%;max-width:1400px;margin-top:50px;padding:10px;float: right;">
+    <center>
+    <h1>Profile settings</h1>
+    <br><br>
+    <div class="row">
+        <button id="Submit" onclick="window.location.href='{% url "accounts:change_password" %}'">Change Password</button>
+        <button id="Submit" onclick="window.location.href='{% url "accounts:delete" %}'">Delete Your Account</button>
+        <button id="Submit" onclick="window.location.href='{% url "accounts:profile" request.user.username %}'">Go Back</button>
+    </div>
+    </center>
+</div>
+{% endblock %}

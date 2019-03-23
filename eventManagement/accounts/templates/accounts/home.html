@@ -1,0 +1,22 @@
+{#{% extends 'base.html' %}#}
+{% load static %}
+{% block title %}
+Welcome to Circlr!
+{% endblock %}
+{% block content %}
+      <center><div id="sitehead">Welcome to <span class="circlrname">Circlr</span>!</div></center>
+      <div class="circlecontainer">
+            <div class="hero-logo-circles">
+                  <img class="hero-logo-circle" src="{% static 'svgs/index-portal-green-semi.svg' %}" alt="Index portal green semi">
+                  <img class="hero-logo-circle" src="{% static 'svgs/index-portal-green.svg' %}" alt="Index portal green">
+                  <img class="hero-logo-circle" src="{% static 'svgs/index-portal-orange-semi.svg' %}" alt="Index portal orange semi">
+                  <img class="hero-logo-circle" src="{% static 'svgs/index-portal-orange.svg' %}" alt="Index portal orange">
+                  <img class="hero-logo-circle" src="{% static 'svgs/index-portal-blue-semi.svg' %}" alt="Index portal blue semi">
+                  <img class="hero-logo-circle" src="{% static 'svgs/index-portal-blue.svg' %}" alt="Index portal blue">
+                  <img class="hero-logo-circle" src="{% static 'svgs/index-portal-red-semi.svg' %}" alt="Index portal red semi">
+                  <img class="hero-logo-circle" src="{% static 'svgs/index-portal-red.svg' %}" alt="Index portal red">
+                  <img class="hero-logo-circle" src="{% static 'svgs/index-portal-yellow-semi.svg' %}" alt="Index portal yellow semi">
+                  <img class="hero-logo-circle" src="{% static 'svgs/index-portal-yellow.svg' %}" alt="Index portal yellow">
+            </div>
+      </div>
+{% endblock %}

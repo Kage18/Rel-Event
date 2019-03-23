@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block head %}
+<title>
+      Profile
+</title>
+{% endblock head %}
+{% block css %}
+{{ block.super }}
+<style>
+  #propic {
+    width: 200px;
+    height: 200px;
+    border-radius: 100px;
+    overflow: hidden;
+    background: url("{{ user.userprofile.picture.url }}");
+    background-position: center;
+    background-size: auto 200px;
+    -webkit-user-select: none;
+    background-repeat: no-repeat;
+    user-select: none;
+    margin: auto;
+    position: relative;
+    top: 50px;
+  }
+
+  .circlepro {
+    flex: 0 0 500px;
+    height: 300px;
+    -webkit-user-select: none;
+    user-select: none;
+    margin-top: 50px;
+  }
+
+  .hero-logo-circles {
+    width: 300px;
+    margin: auto;
+    position: relative;
+  }
+
+  .hero-logo-circle {
+    position: absolute;
+    left: 0;
+    top: 0;
+    animation: hero-logo-circle 1s linear infinite;
+    will-change: transform
+  }
+
+  p {
+    font-size: 18px;
+  }
+
+  #bio {
+    width: 100%;
+    vertical-align: middle;
+    text-align: center;
+    padding: 10px 5px;
+    font-family: Sitefont-book;
+    font-size: 15px;
+    margin-top: -35px;
+    border-radius: 15px;
+    margin-bottom: 15px;
+  }
+
+  #bio:hover {
+    background: rgba(0, 0, 0, 0.2);
+    transition: background 1s;
+  }
+
+  #editdiv{
+    width: 100%;
+    text-align: right;
+  }
+
+  #edit {
+    color: aqua;
+    background-color: rgb(52, 50, 51);
+    transition: all 0.1s ease;
+    cursor: pointer;
+    border-color: aqua;
+    border-radius: 100px;
+    font-family: Sitefont-medium;
+    font-size: 15px;
+    padding: 7px;
+  }
+
+  #edit:hover {
+    color: rgb(52, 50, 51);
+    background-color: aqua;
+    transition: all 0.1s ease;
+  }
+</style>
+{% endblock css %}
+{% block content %}
+<div class="sidepad" style="width:33%;margin-top:80px;padding:10px;float: left;"></div>
+<div class="sidepad" style="width:33%;margin-top:80px;padding:10px;float: right;"></div>
+<div class="centercontent" style="width:34%;padding:10px;float: right;">
+  <div class="circlepro">
+    <div class="hero-logo-circles">
+      <img class="hero-logo-circle" src="{% static 'svgs/index-portal-green-semi.svg' %}" alt="Index portal green semi">
+      <img class="hero-logo-circle" src="{% static 'svgs/index-portal-green.svg' %}" alt="Index portal green">
+      <img class="hero-logo-circle" src="{% static 'svgs/index-portal-orange-semi.svg' %}" alt="Index portal orange semi">
+      <img class="hero-logo-circle" src="{% static 'svgs/index-portal-orange.svg' %}" alt="Index portal orange">
+      <img class="hero-logo-circle" src="{% static 'svgs/index-portal-blue-semi.svg' %}" alt="Index portal blue semi">
+      <img class="hero-logo-circle" src="{% static 'svgs/index-portal-blue.svg' %}" alt="Index portal blue">
+      <img class="hero-logo-circle" src="{% static 'svgs/index-portal-red-semi.svg' %}" alt="Index portal red semi">
+      <img class="hero-logo-circle" src="{% static 'svgs/index-portal-red.svg' %}" alt="Index portal red">
+      <img class="hero-logo-circle" src="{% static 'svgs/index-portal-yellow-semi.svg' %}" alt="Index portal yellow semi">
+      <img class="hero-logo-circle" src="{% static 'svgs/index-portal-yellow.svg' %}" alt="Index portal yellow">
+      <div id="propic"></div><br>
+    </div>
+  </div>
+  <center>
+    <p style="font-size:36px; margin-top:0px;font-family: Sitefont-medium">{{ user }}<br></p>
+    {% if user.userprofile.bio %}<div id="bio">{{ user.userprofile.bio }}</div>{% endif %}
+  </center>
+  <div id="editdiv">
+    {% if editable == True %}
+    <button id="edit" onclick="window.location.href='{% url 'accounts:settings' user.username %}'">Settings</button>
+    <button id="edit" onclick="window.location.href='{% url 'accounts:edit_profile' user.username %}'">Edit Profile</button>
+    {% endif %}
+  </div>
+  </p>
+  <p>Name: {{ user.first_name }} {{ user.last_name }}</p>
+  <p>Email: {{ user.email }} </p>
+  <p>City: {{ user.userprofile.city }} </p>
+  <p id="interest">Interests:
+                {% for int in interestlist %}
+                {{int}},
+                {% endfor %}</p>
+</div>
+{% endblock %}
