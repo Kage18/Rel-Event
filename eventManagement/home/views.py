@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, UserChangeForm, PasswordChangeForm
 from django.contrib.auth import login, logout, authenticate
-from accounts.forms import (
+from .forms import (
     RegistrationForm,
     EditProfileForm
 )

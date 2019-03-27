@@ -1,5 +1,5 @@
 from django.contrib import admin
-from accounts.models import UserProfile, EmailConfirm, Interest_Model
+from .models import UserProfile, EmailConfirm, Interest_Model
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
 
