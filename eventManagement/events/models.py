@@ -12,6 +12,15 @@ class event(models.Model):
     state = models.CharField(max_length=20)
     registered_users = models.ManyToManyField(User, related_name='registered_user',null=True,blank=True)
     private = models.BooleanField(default=False)
-    invited_users = models.ManyToManyField(User, related_name='invited_users',null=True,blank=True)
     date = models.DateField()
     time = models.TimeField()
+
+
+class invitation(models.Model):
+    event = models.ForeignKey(event, null=True, on_delete=models.CASCADE)
+    sender = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
+    to = models.ForeignKey(User, related_name='invited_user', on_delete=models.CASCADE)
+    status = models.BooleanField(default=False)
+    msg = models.CharField(max_length=100)
+
+

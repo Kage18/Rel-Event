@@ -3,5 +3,6 @@
 <form action="{% url 'events:createevent' %}" method="post">
     {% csrf_token %}
     {{ form }}
+{#    {{ invitation }}#}
     <center><input type="submit" value="Submit"></center>
 </form>
