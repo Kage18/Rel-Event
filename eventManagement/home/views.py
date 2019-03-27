@@ -23,12 +23,14 @@ from django.template.loader import render_to_string
 from .tokens import account_activation_token
 from django.core.mail import EmailMessage
 from django.http import Http404
-
+from events.models import event,invitation
 
 # Create your views here.
 @login_required(login_url="/accounts/login")
 def home(request):
-    return render(request, 'accounts/home.html')
+    events = event.objects.all()
+    invites = invitation.objects.filter(to=request.user)
+    return render(request, 'accounts/home.html',{'events':events,'invites':invites})
 
 
 def signup_view(request):
