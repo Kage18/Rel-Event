@@ -6,9 +6,11 @@
 {% block content %}
     <h2>Invites</h2>
     <table>
-    <tr><th>Eventname</th><th>By</th><th>message</th></tr>
+    <tr><th>Eventname</th><th>By</th><th>message</th><th></th></tr>
     {% for i in invites %}
-        <tr><td>{{ i.event.name }}</td><td>{{ i.sender }}</td><td>{{ i.msg }}</td></tr>
+        {% if i.status == False %}
+        <tr><td>{{ i.event.name }}</td><td>{{ i.sender }}</td><td>{{ i.msg }}</td><td><a href="{% url 'events:accept' i.id %}">Accept</a></td></tr>
+        {% endif %}
     {% endfor %}
     </table>
     <h2>Events</h2>
