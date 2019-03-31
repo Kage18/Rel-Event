@@ -1,0 +1,6 @@
+<h1>Create</h1>
+<form action="{% url 'groups:creategroup' %}" method="post">
+    {% csrf_token %}
+    {{ form }}
+    <center><input type="submit" value="Submit"></center>
+</form>
