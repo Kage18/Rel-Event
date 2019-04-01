@@ -23,3 +23,14 @@ def groupview(request):
 
     return render(request, 'groups/groups.html', {'form': form})
 
+
+def accept_invite(request, pk):
+    if pk:
+        invite = Group_invite.objects.get(id=pk)
+        invite.status = True
+        # thisevent=event.objects.get(id=invite.event.id)
+        invite.group.members.add(invite.to)
+        invite.save()
+
+    return redirect(reverse('accounts:home'))
+

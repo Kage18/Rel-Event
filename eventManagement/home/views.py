@@ -24,13 +24,15 @@ from .tokens import account_activation_token
 from django.core.mail import EmailMessage
 from django.http import Http404
 from events.models import event,invitation
-
+from groups.models import Group_invite,Group
 # Create your views here.
 @login_required(login_url="/accounts/login")
 def home(request):
     events = event.objects.all()
     invites = invitation.objects.filter(to=request.user)
-    return render(request, 'accounts/home.html',{'events':events,'invites':invites})
+    group = Group.objects.all()
+    group_invites = Group_invite.objects.filter(to=request.user)
+    return render(request, 'accounts/home.html', {'events': events, 'invites': invites, 'group': group, 'group_invites': group_invites})
 
 
 def signup_view(request):

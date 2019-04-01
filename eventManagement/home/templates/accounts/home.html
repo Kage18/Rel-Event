@@ -22,4 +22,12 @@
 
     {% endfor %}
     </table>
+    <h2>Group_invites</h2>
+    <table>
+    {% for i in group_invites %}
+        {% if i.status == False %}
+        <tr><td>{{ i.group.name }}</td><td>{{ i.group.description }}</td><td>{{ i.group.creator }}</td><td><a href="{% url 'groups:accept' i.id %}">Accept</a></td></tr>
+        {% endif %}
+    {% endfor %}
+    </table>
 {% endblock %}
