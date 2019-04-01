@@ -24,3 +24,10 @@ class invitation(models.Model):
     msg = models.CharField(max_length=100)
 
 
+class comment(models.Model):
+    event = models.ForeignKey(event, null=True, on_delete=models.CASCADE)
+    by = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
+    text = models.CharField(max_length=140)
+    date = models.DateTimeField()
+
+
