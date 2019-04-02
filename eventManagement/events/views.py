@@ -14,11 +14,15 @@ def eventView(request):
     if request.method == 'POST':
         form = EventForm(request.POST)
         if form.is_valid():
-            event = form.save(request)
-            for k in form.cleaned_data['invite_users']:
-                cursor = connection.cursor()
-                cursor.execute("INSERT INTO events_invitation (event_id,sender_id,to_id,msg,status) VALUES( %s , %s , %s, %s, %s)", [event.id, request.user.id, k, form.cleaned_data['message'], 'False'])
+            with connection.cursor() as cursor:
+                cursor.execute("INSERT INTO events_event (date,description,time,city,state,private,venue,name,user_id) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)", [form.cleaned_data['date'], form.cleaned_data['description'], (str)(time), form.cleaned_data['city'], form.cleaned_data['state'],form.cleaned_data['private'], form.cleaned_data['venue'], form.cleaned_data['name'], request.user.id])
+                eid = cursor.lastrowid
                 cursor.close()
+
+                for k in form.cleaned_data['invite_users']:
+                    with connection.cursor() as cursor:
+                        cursor.execute("INSERT INTO events_invitation (event_id,sender_id,to_id,msg,status) VALUES( %s , %s , %s, %s, %s)", [(str)(eid),request.user.id, k, form.cleaned_data['message'], 'False'])
+                        cursor.close()
     else:
         form = EventForm()
     return render(request, 'events/events.html', {'form': form})
