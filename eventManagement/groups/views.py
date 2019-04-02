@@ -14,7 +14,9 @@ def groupview(request):
             group = form.save(request)
             for k in form.cleaned_data['to']:
                 user = User.objects.get(id=k)
+                print('user: ', user.query)
                 invite = Group_invite.objects.create(to=user)
+                print('invite: ', invite.query)
                 invite.group = group
                 invite.save()
 
