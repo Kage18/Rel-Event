@@ -1,0 +1,173 @@
+{% extends 'home/base.html' %}
+{% load static %}
+{% block title %}
+
+{% endblock %}
+{% block body %}
+    <div style="margin-top: 100px"></div>
+    <h2>Invites</h2>
+    <table>
+        <tr>
+            <th>Eventname</th>
+            <th>By</th>
+            <th>message</th>
+            <th></th>
+        </tr>
+        {% for i in invites %}
+            {% if i.status == False %}
+                <tr>
+                    <td>{{ i.event.name }}</td>
+                    <td>{{ i.sender }}</td>
+                    <td>{{ i.msg }}</td>
+                    <td><a href="{% url 'events:accept' i.id %}">Accept</a></td>
+                </tr>
+            {% endif %}
+        {% endfor %}
+    </table>
+    <h2>Upcoming Events</h2>
+    <table>
+        <tr>
+            <th>By</th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>venue</th>
+            <th>State</th>
+            <th>City</th>
+            <th>Date</th>
+            <th>Time</th>
+        </tr>
+        {% for e in events %}
+            <tr>
+                <td>{{ e.user }}</td>
+                <td>{{ e.name }}</td>
+                <td>{{ e.description }}</td>
+                <td>{{ e.venue }}</td>
+                <td>{{ e.state }}</td>
+                <td>{{ e.city }}</td>
+                <td>{{ e.date }}</td>
+                <td>{{ e.time }}</td>
+            </tr>
+
+        {% endfor %}
+    </table>
+    <h2>Group_invites</h2>
+    <table>
+        {% for i in group_invites %}
+            {% if i.status == False %}
+                <tr>
+                    <td>{{ i.group.name }}</td>
+                    <td>{{ i.group.description }}</td>
+                    <td>{{ i.group.creator }}</td>
+                    <td><a href="{% url 'groups:accept' i.id %}">Accept</a></td>
+                </tr>
+            {% endif %}
+        {% endfor %}
+    </table>
+    <h2>Requests to join your groups</h2>
+    <ul>
+        {% for i in group_requests_rcvd %}
+            <li>Request from {{ i.request_from }} to join {{ i.group.name }}
+                <p class="accept" id="acc-write" acc="{{ i.id }}"><u id="rem1">Accept this request</u></p>
+                <p class="decline" id="dec-write" dec="{{ i.id }}"><u id="rem2">Decline this request</u></p>
+            </li>
+        {% endfor %}
+    </ul>
+
+
+    <h3>Pending requests:</h3>
+    <ul>
+        {% for i in sent_group_requests %}
+            <li>{{ i.group }} Request sent</li>
+
+        {% endfor %}
+        <ul id="write"></ul>
+
+    </ul>
+    <h3>You may like:</h3>
+    <ul>
+        {% if not send_group_request.count == 0 %}
+            {% for i in send_group_request %}
+                <li id="blah">
+                    {{ i.name }}
+                    <button class="r" type='submit' name='add friend' k='{{ i.id }}'>Send request</button>
+                </li>
+            {% endfor %}
+            </ul>
+        {% else %}
+            --No new groups to show--
+        {% endif %}
+    {% csrf_token %}
+    <script>
+        $(".r").click(function () {
+            console.log('jskdnfls');
+            let li = $(this).parent();
+
+            $.ajax({
+                type: 'POST',
+                url: '/groups/sendr/',
+                data: {
+                    //csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
+                    csrfmiddlewaretoken: '{{ csrf_token }}',
+                    req: $(this).attr("k"),
+                },
+                success: function (data) {
+                    $("#write").append(data);
+                    $(li).remove();
+
+                },
+
+                error: function (jqXHR, textStatus, errorThrown) {
+                    alert(errorThrown);
+                }
+
+            });
+        });
+        $(".accept").click(function () {
+            console.log('jskdnfls');
+            let li = $(this).parent();
+            $.ajax({
+                type: 'POST',
+                url: '/groups/accept-req/',
+                data: {
+                    //csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
+                    csrfmiddlewaretoken: '{{ csrf_token }}',
+                    req: $(this).attr("acc"),
+                },
+                success: function (data) {
+                    {#$("#rem1").remove();#}
+                    {#$("#rem2").remove();#}
+                    {#                    $("#acc-write").append(data);#}
+
+                    $(li).html(data);
+
+                },
+
+                error: function (jqXHR, textStatus, errorThrown) {
+                    alert(errorThrown);
+                }
+
+            });
+        });
+        $(".decline").click(function () {
+            let li = $(this).parent();
+
+            $.ajax({
+                type: 'POST',
+                url: '/groups/decline-req/',
+                data: {
+                    csrfmiddlewaretoken: '{{ csrf_token }}',
+                    req: $(this).attr("dec"),
+                },
+                success: function (data) {
+
+                    $(li).html(data);
+                },
+
+                error: function (jqXHR, textStatus, errorThrown) {
+                    alert(errorThrown);
+                }
+
+            });
+        });
+    </script>
+{% endblock %}

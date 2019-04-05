@@ -6,5 +6,5 @@ app_name = 'events'
 urlpatterns = [
     path('create/', views.eventView, name='createevent'),
     path('accept/<int:pk>', views.accept_invite, name='accept'),
-
+    path('comment/', views.comment, name='comment'),
 ]

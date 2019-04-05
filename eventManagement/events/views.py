@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect
-from .forms import EventForm
+from .forms import EventForm,CommentForm
 from django.contrib.auth.decorators import login_required
 from .models import invitation,event
 from django.contrib.auth.models import User
@@ -9,7 +9,7 @@ from django.db import connection
 
 # Create your views here.
 
-@login_required(login_url="/accounts/login")
+@login_required(login_url="/dashboard/login")
 def eventView(request):
     if request.method == 'POST':
         form = EventForm(request.POST)
@@ -35,6 +35,22 @@ def accept_invite(request, pk):
             invite = invitation.objects.raw('select * from events_invitation where id = %s', [pk])[0]
             cursor.execute("INSERT INTO events_event_registered_users(event_id, user_id) VALUES( %s , %s )", [invite.event_id, invite.to_id])
             cursor.close()
-    return redirect(reverse('accounts:home'))
+    return redirect(reverse('home:dashboard'))
 
 
+
+def comment(request):
+    if request.method == 'POST':
+        form = CommentForm(request.POST)
+        if form.is_valid():
+            # with connection.cursor() as cursor:
+            #     cursor.execute("INSERT INTO events_comment (event,by,text,user_id) VALUES (%s,%s,%s,%s)",[form.cleaned_data['event'], request.user,form.cleaned_data['text'], request.user.id])
+            #     cursor.close()
+            new_form= form.save(commit=False)
+            new_form.by = request.user
+            new_form.save()
+
+
+    else:
+        form = CommentForm()
+    return render(request, 'events/comment.html', {'form': form})
