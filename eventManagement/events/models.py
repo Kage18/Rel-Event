@@ -15,6 +15,8 @@ class event(models.Model):
     date = models.DateField()
     time = models.TimeField()
 
+    def __str__(self):
+        return self.name
 
 class invitation(models.Model):
     event = models.ForeignKey(event, null=True, on_delete=models.CASCADE)
@@ -23,6 +25,16 @@ class invitation(models.Model):
     status = models.BooleanField(default=False)
     msg = models.CharField(max_length=100)
 
+    def __str__(self):
+        return self.event.name+'--by--'+self.sender.username+'--to--'+self.to.username
+
+class eventreq(models.Model):
+    event = models.ForeignKey(event,on_delete=models.CASCADE)
+    by = models.ForeignKey(User,on_delete=models.CASCADE)
+    status = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.event.name+'--'+self.by.username
 
 class comment(models.Model):
     event = models.ForeignKey(event, null=True, on_delete=models.CASCADE)

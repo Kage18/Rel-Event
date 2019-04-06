@@ -5,6 +5,24 @@
 {% endblock %}
 {% block body %}
     <div style="margin-top: 100px"></div>
+    <h2>Event Requests</h2>
+    <table>
+        <tr>
+            <th>Eventname</th>
+            <th>By</th>
+            <th>message</th>
+            <th></th>
+        </tr>
+        {% for i in eventreq %}
+            {% if i.status == False %}
+                <tr>
+                    <td>{{ i.event.name }}</td>
+                    <td>{{ i.by }}</td>
+                    <td><button class="acceptreq" reqid="{{ i.id }}">Accept</button></td>
+                </tr>
+            {% endif %}
+        {% endfor %}
+    </table>
     <h2>Invites</h2>
     <table>
         <tr>
@@ -37,9 +55,10 @@
             <th>Time</th>
         </tr>
         {% for e in events %}
+
             <tr>
                 <td>{{ e.user }}</td>
-                <td>{{ e.name }}</td>
+                <td><a href="{% url "events:details" e.id %}">{{ e.name }}</a></td>
                 <td>{{ e.description }}</td>
                 <td>{{ e.venue }}</td>
                 <td>{{ e.state }}</td>
@@ -47,7 +66,6 @@
                 <td>{{ e.date }}</td>
                 <td>{{ e.time }}</td>
             </tr>
-
         {% endfor %}
     </table>
     <h2>Group_invites</h2>
@@ -100,7 +118,7 @@
     <script>
         $(".r").click(function () {
             console.log('jskdnfls');
-            let li = $(this).parent();
+                let li = $(this).parent();
 
             $.ajax({
                 type: 'POST',
@@ -161,6 +179,27 @@
                 success: function (data) {
 
                     $(li).html(data);
+                },
+
+                error: function (jqXHR, textStatus, errorThrown) {
+                    alert(errorThrown);
+                }
+
+            });
+        });
+        $(".acceptreq").click(function () {
+            console.log('jskdnfls');
+            let td = $(this).parent();
+            $.ajax({
+                type: 'POST',
+                url: '{% url "events:acceptreq" %}',
+                data: {
+                    csrfmiddlewaretoken: '{{ csrf_token }}',
+                    pk: $(this).attr("reqid"),
+                },
+                success: function (data) {
+                    $(td).html(data);
+
                 },
 
                 error: function (jqXHR, textStatus, errorThrown) {

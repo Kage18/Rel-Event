@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
-from events.models import event, invitation
+from events.models import event, invitation, eventreq
 from groups.models import *
 
 
@@ -20,6 +20,7 @@ def index(request):
 
     return render(request, 'home/landing.html', {'events': events})
 
+
 @login_required(login_url="/home/login")
 def dashboard(request):
     events = event.objects.all()
@@ -31,34 +32,24 @@ def dashboard(request):
 
     for g in grp:
         if Group_request.objects.filter(group=g).exists():
-            group_requests_rcvd |= Group_request.objects.filter(group = g,request_status=0)
+            group_requests_rcvd |= Group_request.objects.filter(group=g, request_status=0)
 
     sent_group_requests = Group_request.objects.filter(request_from=request.user, request_status=0)
     send_requests_group = Group.objects.none()
     for i in group:
-        if (not Group.objects.filter(name=i.name,members=request.user).exists() and not Group_request.objects.filter(group=i,request_from=request.user).exists()):
+        if (not Group.objects.filter(name=i.name, members=request.user).exists() and not Group_request.objects.filter(
+                group=i, request_from=request.user).exists()):
             send_requests_group |= Group.objects.filter(name=i.name)
     print(send_requests_group)
+    eventrequest = eventreq.objects.raw(
+        "select * from events_eventreq where event_id in (select id from events_event where user_id = %s) and status = %s",
+        [request.user.id, 'False'])
     return render(request, 'home/homepage.html',
                   {'events': events, 'invites': invites, 'group': group, 'group_invites': group_invites,
                    'sent_group_requests': sent_group_requests,
-                   'send_group_request': send_requests_group,'group_requests_rcvd':group_requests_rcvd})
+                   'send_group_request': send_requests_group, 'group_requests_rcvd': group_requests_rcvd,
+                   'eventreq': eventrequest})
 
-# def dashboard(request):
-#     events = event.objects.all()
-#     invites = invitation.objects.filter(to=request.user)
-#     group = Group.objects.all()
-#     group_invites = Group_invite.objects.filter(to=request.user)
-#     sent_group_requests = Group_request.objects.filter(request_from=request.user, request_status=False)
-#     send_requests_group = Group.objects.none()
-#     for i in group:
-#         if (not Group.objects.filter(name=i.name,members=request.user).exists() and not Group_request.objects.filter(group=i,request_from=request.user).exists()):
-#             send_requests_group |= Group.objects.filter(name=i.name)
-#     print(send_requests_group)
-#     return render(request, 'home/homepage.html',
-#                   {'events': events, 'invites': invites, 'group': group, 'group_invites': group_invites,
-#                    'sent_group_requests': sent_group_requests,
-#                    'send_group_request': send_requests_group})
 
 def signup_view(request):
     if request.method == 'POST':
@@ -70,6 +61,7 @@ def signup_view(request):
     else:
         form = UserCreationForm()
     return render(request, 'home/signup.html', {'form': form})
+
 
 def login_view(request):
     if request.method == 'POST':
@@ -84,6 +76,7 @@ def login_view(request):
     else:
         form = AuthenticationForm()
     return render(request, 'home/login.html', {'form': form})
+
 
 def logout_view(request):
     if request.method == 'POST':
