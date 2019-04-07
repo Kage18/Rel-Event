@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <title></title>
+</head>
+<body>
+<h1>{{ grp.id }}:{{ grp.name }}</h1>
+    <h3>Group Details</h3>
+<h4>{{ grp.description }}</h4>
+
+{% if flag == 0 %}
+    Here
+<button class="r" type='submit' k='{{ grp.id }}'>Send request</button>
+    <p id="write"></p>
+    {% elif flag == 1 %}
+        <button>Requested</button>
+    {% elif flag == 2%}
+            <button>You are a member of this group</button>
+
+{% endif %}
+<script src="jquery-3.3.1.min.js"></script>
+<script>
+   $(".r").click(function () {
+            console.log('jskdnfls');
+            //alert("Riya");
+            $.ajax({
+                type: 'POST',
+                url: '/groups/sendr/',
+                data: {
+                    //csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
+                    csrfmiddlewaretoken: '{{ csrf_token }}',
+                    req: $(this).attr("k"),
+                },
+                success: function (data) {
+                    $("#write").html(data);
+                    $(".r").remove()
+                },
+
+                error: function (jqXHR, textStatus, errorThrown) {
+                    alert(errorThrown);
+                }
+
+            });
+        });
+</script>
+</body>
+</html>

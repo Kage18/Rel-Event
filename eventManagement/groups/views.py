@@ -47,6 +47,7 @@ def groupview(request):
 
 @login_required(login_url="/home/login")
 def sendr(request):
+    print("Inside Senderr")
     if request.method == 'POST':
         req = request.POST['req']
         receiver = Group.objects.get(id=req)
@@ -84,27 +85,66 @@ def accept_invite(request, pk):
             cursor.close()
     return redirect(reverse('home:dashboard'))
 
+def grp_page(request,pk):
+    grp = Group.objects.raw('select * from groups_group where id = %s',[pk])
+    print(grp[0])
+    if pk:
+        k = Group.objects.raw(
+            'select * from groups_group where id=%s and id in(select group_id as id from groups_group_request where request_from_id = %s and request_status=%s)',[pk,request.user.id,0])
+
+        l = Group.objects.raw("select * from groups_group where id=%s and id in(select group_id as id from groups_group_members where user_id = %s)",[pk,request.user.id])
+
+        if(len(k)):
+            print("Request has already been sent")
+            return render(request,"groups/group_page.html",{'flag':1,'grp':grp[0]})
+
+
+        if (len(l)):
+            print("Already a member")
+
+            return render(request, "groups/group_page.html", {'flag': 2,'grp':grp[0]})
+    print("Sending")
+    return render(request,"groups/group_page.html",{'flag':0,'grp':grp[0]})
+
+
 
 @login_required(login_url="/home/login")
 def accept_req(request):
     if request.method == 'POST':
         req = request.POST['req']
-        sender = Group_request.objects.get(id=req)
-        sender.request_status = 1
-        sender.save()
-        print(sender)
-        print(Group.objects.filter(id=sender.group.id, members=sender.request_from))
-        if Group.objects.filter(id=sender.group.id, members=sender.request_from).exists():
+        sender = Group_request.objects.raw("select * from groups_group_request where id=%s",[req])[0]
+        # sender.request_status = 1
+        # sender.save()
+
+        with connection.cursor() as cursor:
+            cursor.execute("UPDATE groups_group_request SET request_status = %s WHERE id = %s", [1, req])
+            cursor.close()
+
+        # print(sender)
+        # print(Group.objects.filter(id=sender.group.id, members=sender.request_from))
+        k = Group.objects.raw("select * from groups_group where id=%s and id in (select group_id from groups_group_members where user_id=%s)",[sender.group.id,sender.request_from.id])
+        # if Group.objects.filter(id=sender.group.id, members=sender.request_from).exists():
+        #     print("Good one")
+        #     return render(request, "groups/request.html", {"message": 'Already a member'})
+
+        if(len(k)):
             print("Good one")
             return render(request, "groups/request.html", {"message": 'Already a member'})
+
         else:
             # print("Bad one")
             # Group_request.objects.create(group=receiver, request_from=request.user,request_status=False)
             print(sender.group.id)
-            grp = Group.objects.get(id=sender.group.id)
+            # grp = Group.objects.get(id=sender.group.id)
+            grp = Group.objects.raw("select * from groups_group where id=%s",[sender.group.id])
+
             print(grp)
             print(sender.request_from)
-            sender.group.members.add(sender.request_from)
+            # sender.group.members.add(sender.request_from)
+            with connection.cursor() as cursor:
+                cursor.execute("INSERT INTO groups_group_members (group_id, user_id) VALUES (%s,%s)",[sender.group.id,sender.request_from.id])
+                cursor.close()
+
             return render(request, "groups/request_acc.html", {'user': sender.request_from,'grp':grp,'message':'accepted'})
 
 
@@ -112,13 +152,20 @@ def accept_req(request):
 def decline_req(request):
     if request.method == 'POST':
         req = request.POST['req']
-        sender = Group_request.objects.get(id=req)
-        sender.request_status = 2
-        sender.save()
-        print(sender)
-        print(Group.objects.filter(id=sender.group.id, members=sender.request_from))
+        # sender = Group_request.objects.filter(id=req).delete()
+        sender = Group_request.objects.raw("select * from groups_group_request where id=%s",[req])[0]
+        name = sender.request_from
+        grp = sender.group
+
+        with connection.cursor() as cursor:
+            cursor.execute("DELETE FROM groups_group_request WHERE id=%s",[req])
+            cursor.close()
+        # sender.request_status = 0
+        # sender.save()
+        # print(sender)
+        # print(Group.objects.filter(id=sender.group.id, members=sender.request_from))
         try:
-            return render(request, "groups/request_acc.html", {'user': sender.request_from,'grp':sender.group,'message':'declined'})
+            return render(request, "groups/request_acc.html", {'user': name,'grp':grp,'message':'declined'})
         except:
             return render(request, "groups/request_acc.html", {'message':'Error occured'})
 

@@ -3,6 +3,7 @@ from . import views
 app_name = 'groups'
 
 urlpatterns = [
+    path('page/<int:pk>/', views.grp_page, name='grp-page'),
     path('create/', views.groupview, name='creategroup'),
     path('sendr/', views.sendr, name='sendr'),
     path('accept/<int:pk>', views.accept_invite, name='accept'),
