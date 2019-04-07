@@ -106,8 +106,9 @@
         {% if not send_group_request.count == 0 %}
             {% for i in send_group_request %}
                 <li id="blah">
-                    {{ i.name }}
-                    <button class="r" type='submit' name='add friend' k='{{ i.id }}'>Send request</button>
+{#                    <button class="r" type='submit' name='add friend' k='{{ i.id }}'>Send request</button>#}
+                    <a href="{% url 'groups:grp-page' i.id %}"> {{ i.name }}</a>
+
                 </li>
             {% endfor %}
             </ul>
@@ -116,30 +117,7 @@
         {% endif %}
     {% csrf_token %}
     <script>
-        $(".r").click(function () {
-            console.log('jskdnfls');
-                let li = $(this).parent();
 
-            $.ajax({
-                type: 'POST',
-                url: '/groups/sendr/',
-                data: {
-                    //csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
-                    csrfmiddlewaretoken: '{{ csrf_token }}',
-                    req: $(this).attr("k"),
-                },
-                success: function (data) {
-                    $("#write").append(data);
-                    $(li).remove();
-
-                },
-
-                error: function (jqXHR, textStatus, errorThrown) {
-                    alert(errorThrown);
-                }
-
-            });
-        });
         $(".accept").click(function () {
             console.log('jskdnfls');
             let li = $(this).parent();

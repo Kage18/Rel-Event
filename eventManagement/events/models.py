@@ -7,7 +7,7 @@ class event(models.Model):
     user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL, related_name='user')
     name = models.CharField(max_length=50)
     description = models.CharField(max_length=150)
-    venue = models.CharField(max_length=20)
+    venue = models.CharField(max_length=100)
     city = models.CharField(max_length=20)
     state = models.CharField(max_length=20)
     registered_users = models.ManyToManyField(User, related_name='registered_user',null=True,blank=True)
@@ -15,8 +15,10 @@ class event(models.Model):
     date = models.DateField()
     time = models.TimeField()
 
+
     def __str__(self):
         return self.name
+
 
 class invitation(models.Model):
     event = models.ForeignKey(event, null=True, on_delete=models.CASCADE)
