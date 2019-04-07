@@ -95,7 +95,7 @@
     <h3>Pending requests:</h3>
     <ul>
         {% for i in sent_group_requests %}
-            <li>{{ i.group }} Request sent</li>
+            <li>{{ i.group.name }} - Request sent</li>
 
         {% endfor %}
         <ul id="write"></ul>

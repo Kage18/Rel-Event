@@ -23,11 +23,21 @@ def index(request):
 
 @login_required(login_url="/home/login")
 def dashboard(request):
-    events = event.objects.all()
-    invites = invitation.objects.filter(to=request.user)
-    group = Group.objects.all()
-    group_invites = Group_invite.objects.filter(to=request.user)
-    grp = Group.objects.filter(creator=request.user)
+    # events = event.objects.all()
+    events = event.objects.raw("select * from events_event")
+
+    # invites = invitation.objects.filter(to=request.user)
+    invites = invitation.objects.raw("select * from events_invitation where to_id = %s and status = %s",[request.user.id,0])
+
+    # group = Group.objects.all()
+    group = Group.objects.raw("select * from groups_Group")
+
+    # group_invites = Group_invite.objects.filter(to=request.user)
+    group_invites = Group_invite.objects.raw("select * from groups_Group_invite where to_id = %s and status = %s", [request.user.id,0])
+
+    # grp = Group.objects.filter(creator=request.user)
+    grp = Group.objects.raw("select * from groups_Group where creator_id = %s",[request.user.id])
+
     group_requests_rcvd = Group_request.objects.none()
 
     for g in grp:
@@ -35,17 +45,21 @@ def dashboard(request):
             group_requests_rcvd |= Group_request.objects.filter(group=g, request_status=0)
 
     sent_group_requests = Group_request.objects.filter(request_from=request.user, request_status=0)
+
     send_requests_group = Group.objects.none()
     for i in group:
         if (not Group.objects.filter(name=i.name, members=request.user).exists() and not Group_request.objects.filter(
                 group=i, request_from=request.user).exists()):
             send_requests_group |= Group.objects.filter(name=i.name)
+
     print(send_requests_group)
+
     eventrequest = eventreq.objects.raw(
         "select * from events_eventreq where event_id in (select id from events_event where user_id = %s) and status = %s",
         [request.user.id, 'False'])
+
     return render(request, 'home/homepage.html',
-                  {'events': events, 'invites': invites, 'group': group, 'group_invites': group_invites,
+                  {'events': events, 'invites': invites,'group_invites': group_invites,
                    'sent_group_requests': sent_group_requests,
                    'send_group_request': send_requests_group, 'group_requests_rcvd': group_requests_rcvd,
                    'eventreq': eventrequest})
