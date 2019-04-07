@@ -1,0 +1,16 @@
+{% extends 'home/base.html' %}
+{% load static %}
+{% block title %}
+
+{% endblock %}
+{% block body %}
+<div class="" style="padding-top: 100px; padding-bottom: 100px; padding-left: 150px; padding-right: 150px; background-color: #EBF3FA ">
+
+    {% for event in events %}
+        {{ event.name }}
+        {{ event.description }}
+        {{ event.venue }}
+        <br>
+    {% endfor %}
+    </div>
+{% endblock %}

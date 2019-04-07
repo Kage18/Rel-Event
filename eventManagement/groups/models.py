@@ -18,6 +18,21 @@ class Group_invite(models.Model):
     status = models.BooleanField(default=False)
 
 
+class Group_request(models.Model):
+    group = models.ForeignKey(Group, null=True, on_delete=models.CASCADE)
+    request_from = models.ForeignKey(User, related_name="requestgroup", null=True, blank=True, on_delete=models.CASCADE)
+    request_status = models.IntegerField(default=0)
+    #0: for not yet accepted
+    #1: accepted
+    #2: declined
+
+
+
+
+
+
+
+
     
 
 

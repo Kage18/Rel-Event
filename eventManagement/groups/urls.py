@@ -4,6 +4,9 @@ app_name = 'groups'
 
 urlpatterns = [
     path('create/', views.groupview, name='creategroup'),
+    path('sendr/', views.sendr, name='sendr'),
     path('accept/<int:pk>', views.accept_invite, name='accept'),
+    path('accept-req/', views.accept_req, name='accept_req'),
+    path('decline-req/', views.decline_req, name='decline_req'),
 
 ]

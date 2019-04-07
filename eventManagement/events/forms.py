@@ -1,5 +1,5 @@
 from django import forms
-from .models import event,invitation
+from .models import event,invitation,comment
 from django.contrib.auth.models import User
 
 
@@ -34,3 +34,10 @@ class EventForm(forms.ModelForm):
 
 
 
+class CommentForm(forms.ModelForm):
+
+
+    class Meta:
+        model = comment
+        fields = '__all__'
+        exclude = ['by']

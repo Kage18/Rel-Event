@@ -1,0 +1,68 @@
+{% extends 'home/base.html' %}
+{% load static %}
+{% block title %}
+
+{% endblock %}
+
+{% block body %}
+    <div style="margin-top: 100px"></div>
+    <table border="10">
+        <tr>
+            <th>By</th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>venue</th>
+            <th>State</th>
+            <th>City</th>
+            <th>Date</th>
+            <th>Time</th>
+        </tr>
+        <tr>
+            <td>{{ e.user }}</td>
+            <td>{{ e.name }}</td>
+            <td>{{ e.description }}</td>
+            <td>{{ e.venue }}</td>
+            <td>{{ e.state }}</td>
+            <td>{{ e.city }}</td>
+            <td>{{ e.date }}</td>
+            <td>{{ e.time }}</td>
+            <td>
+                {% if sent %}
+                    {% if sentreq.status %}
+                        Going
+                    {% else %}
+                        Pending
+                    {% endif %}
+
+                {% else %}
+                    <button type="submit" class="r" k="{{ e.id }}">send</button>
+                {% endif %}
+            </td>
+        </tr>
+    </table>
+    {% csrf_token %}
+    <script>
+        $(".r").click(function () {
+            console.log('jndalknl')
+            let td = $(this).parent();
+            $.ajax({
+                type: 'POST',
+                url: '{% url "events:send" %}',
+                data: {
+                    csrfmiddlewaretoken: '{{ csrf_token }}',
+                    id: $(this).attr("k"),
+                },
+                success: function (data) {
+                    console.log('ljsdmlfm')
+                    $(this).remove();
+                    $(td).html(data);
+                },
+
+                error: function (jqXHR, textStatus, errorThrown) {
+                    alert(errorThrown);
+                }
+
+            });
+        });
+    </script>
+{% endblock %}
