@@ -141,9 +141,9 @@ def accept_req(request):
             print(grp)
             print(sender.request_from)
             # sender.group.members.add(sender.request_from)
-            with connection.cursor() as cursor:
-                cursor.execute("INSERT INTO groups_group_members (group_id, user_id) VALUES (%s,%s)",[sender.group.id,sender.request_from.id])
-                cursor.close()
+                # with connection.cursor() as cursor:
+                #     cursor.execute("INSERT INTO groups_group_members (group_id, user_id) VALUES (%s,%s)",[sender.group.id,sender.request_from.id])
+                #     cursor.close()
 
             return render(request, "groups/request_acc.html", {'user': sender.request_from,'grp':grp,'message':'accepted'})
 
