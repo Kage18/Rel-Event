@@ -13,13 +13,13 @@ class GroupsForm(forms.ModelForm):
         fields = '__all__'
         exclude = ['creator']
 
-    # def save(self, request,commit=True):
-    #     group = super(GroupsForm, self).save(commit=False)
-    #     group.creator = request.user
-    #     group.name = self.cleaned_data['name']
-    #     group.description = self.cleaned_data['description']
-    #
-    #     if commit:
-    #         group.save()
-    #
-    #     return 1
+    def save(self, request,commit=True):
+        group = super(GroupsForm, self).save(commit=False)
+        group.creator = request.user
+        group.name = self.cleaned_data['name']
+        group.description = self.cleaned_data['description']
+
+        if commit:
+            group.save()
+
+        return group

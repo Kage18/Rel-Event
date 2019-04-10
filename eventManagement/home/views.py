@@ -30,10 +30,10 @@ def dashboard(request):
     invites = invitation.objects.raw("select * from events_invitation where to_id = %s and status = %s",[request.user.id,0])
 
     # group = Group.objects.all()
-    group = Group.objects.raw("select * from groups_Group")
+    group = Group.objects.raw("select * from groups_group")
 
     # group_invites = Group_invite.objects.filter(to=request.user)
-    group_invites = Group_invite.objects.raw("select * from groups_Group_invite where to_id = %s and status = %s", [request.user.id,0])
+    group_invites = Group_invite.objects.raw("select * from groups_group_invite where to_id = %s and status = %s", [request.user.id,0])
 
     # grp = Group.objects.filter(creator=request.user)
     # grp = Group.objects.raw("select * from groups_Group where creator_id = %s",[request.user.id])
@@ -45,7 +45,7 @@ def dashboard(request):
     #         group_requests_rcvd |= Group_request.objects.filter(group=g, request_status=0)
 
     group_requests_rcvd = Group_request.objects.raw(
-        "select * from groups_Group_request where group_id in (select id from groups_Group where creator_id = %s) and request_status=%s",[request.user.id,0])
+        "select * from groups_group_request where group_id in (select id from groups_group where creator_id = %s) and request_status=%s",[request.user.id,0])
     # print(group_requests_rcvd[0])
     # sent_group_requests = Group_request.objects.filter(request_from=request.user, request_status=0)
 
