@@ -4,9 +4,9 @@ from django.contrib.auth.models import User
 
 
 class GroupsForm(forms.ModelForm):
-    # CHOICES = [[x.id, x.username] for x in User.objects.all()]
-    # to = forms.MultipleChoiceField(widget=forms.SelectMultiple, choices=CHOICES)
-    # message = forms.CharField(max_length=100)
+    CHOICES = [[x.id, x.username] for x in User.objects.all()]
+    to = forms.MultipleChoiceField(widget=forms.SelectMultiple, choices=CHOICES)
+    message = forms.CharField(max_length=100)
 
     class Meta:
         model = Group
@@ -22,4 +22,4 @@ class GroupsForm(forms.ModelForm):
         if commit:
             group.save()
 
-        return group
+        return 1

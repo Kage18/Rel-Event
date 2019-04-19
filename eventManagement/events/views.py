@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
-from .forms import EventForm, CommentForm
+from .forms import EventForm,ReviewForm
 from django.contrib.auth.decorators import login_required
-from .models import invitation, event, eventreq
+from .models import *
 from django.contrib.auth.models import User
 from django.urls import reverse
 from django.db import connection
@@ -33,8 +33,8 @@ def eventView(request):
         if form.is_valid():
             with connection.cursor() as cursor:
                 cursor.execute(
-                    "INSERT INTO events_event (date,description,time,city,state,private,venue,name,user_id) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)",
-                    [form.cleaned_data['date'], form.cleaned_data['description'], (str)(form.cleaned_data['time']),
+                    "INSERT INTO events_event (start_date,start_time,end_date,end_time,description,city,state,private,venue,name,user_id) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",
+                    [form.cleaned_data['start_date'],(str)(form.cleaned_data['start_time']),form.cleaned_data['end_date'], (str)(form.cleaned_data['end_time']),form.cleaned_data['description'],
                      form.cleaned_data['city'], form.cleaned_data['state'], form.cleaned_data['private'],
                      form.cleaned_data['venue'], form.cleaned_data['name'], request.user.id])
                 eid = cursor.lastrowid
@@ -44,7 +44,7 @@ def eventView(request):
                     with connection.cursor() as cursor:
                         cursor.execute(
                             "INSERT INTO events_invitation (event_id,sender_id,to_id,msg,status) VALUES( %s , %s , %s, %s, %s)",
-                            [(str)(eid), request.user.id, k, form.cleaned_data['message'], '0'])
+                            [(str)(eid), request.user.id, k, form.cleaned_data['message'], 0])
                         cursor.close()
     else:
         form = EventForm()
@@ -61,9 +61,35 @@ def EventDetails(request, pk):
     sent = 1
     if len(sentreq) == 0:
         sent = 0
-        return render(request, 'events/details.html', {'e': e, 'sent': sent})
+        return render(request, 'events/details.html', {'e': e, 'sent': sent , 'invite': invite})
 
     return render(request, 'events/details.html', {'e': e, 'sent': sent, 'sentreq': sentreq[0]})
+
+
+def PastEventDetails(request, pk):
+    if request.method == 'POST':
+        form = ReviewForm(request.POST)
+        rate = request.POST['rating']
+        print("Rating:",rate)
+        if form.is_valid():
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    "INSERT INTO events_review (event_id,by_id,text,date,rating) VALUES (%s,%s,%s,%s,%s)",
+                    [pk,request.user.id,form.cleaned_data['text'],p.now(),rate])
+                cursor.close()
+
+
+    e = event_archive.objects.raw("select * from events_event_archive where id = %s", [pk])[0]
+    c = review.objects.raw("select * from events_review where event_id = %s", [pk])
+    commentbyuser = review.objects.raw("select * from events_review where event_id = %s and by_id = %s", [pk,request.user.id])
+    print(commentbyuser)
+    flag = 0
+    if len(commentbyuser) == 0:
+        form = ReviewForm()
+        print(len(commentbyuser))
+        flag = 1
+        return render(request, 'events/pasteventdetail.html', {'e': e, 'c': c, 'form': form,'flag':flag})
+    return render(request, 'events/pasteventdetail.html', {'e': e, 'c': c,'flag':flag})
 
 
 def send(request):
@@ -72,7 +98,7 @@ def send(request):
         print('------------------------------', id)
         with connection.cursor() as cursor:
             cursor.execute("INSERT INTO events_eventreq (status, by_id, event_id) VALUES (%s,%s,%s)",
-                           ['0', request.user.id, id])
+                           [0, request.user.id, id])
             eid = cursor.lastrowid
             print(eid)
             cursor.close()
@@ -104,7 +130,7 @@ def acceptreq(request):
 
 def comment(request):
     if request.method == 'POST':
-        form = CommentForm(request.POST)
+        form = ReviewForm(request.POST)
         if form.is_valid():
             # with connection.cursor() as cursor:
             #     cursor.execute("INSERT INTO events_comment (event,by,text,user_id) VALUES (%s,%s,%s,%s)",[form.cleaned_data['event'], request.user,form.cleaned_data['text'], request.user.id])
@@ -115,5 +141,12 @@ def comment(request):
 
 
     else:
-        form = CommentForm()
+        form = ReviewForm()
     return render(request, 'events/comment.html', {'form': form})
+
+
+def pastevents(request):
+    # past_event = event_archive.objects.raw('SELECT * FROM events_event_archive')
+    past_event = event_archive.objects.all()
+    print(past_event)
+    return render(request, 'events/pastevents.html',{'pevent':past_event})

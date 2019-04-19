@@ -30,7 +30,7 @@ def groupview(request):
             for k in form.cleaned_data['to']:
                 with connection.cursor() as cursor:
                     cursor.execute("INSERT INTO groups_group_invite (group_id,to_id,status) VALUES( %s , %s , %s)",
-                                   [(str)(gid), k, 0])
+                                   [(str)(gid), k, '0'])
                     cursor.close()
                 # user = User.objects.get(id=k)
                 # print('user: ', user.query)

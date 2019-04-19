@@ -136,6 +136,23 @@
     }
 },
 {
+    "model": "auth.user",
+    "fields": {
+        "password": "pbkdf2_sha256$120000$psGwTgIwcmcl$vOGnZUG90gpBLqvON595WhuDkPLHdPxeX6B+UFEbfiM=",
+        "last_login": "2019-04-10T20:19:35.069Z",
+        "is_superuser": true,
+        "username": "admin",
+        "first_name": "",
+        "last_name": "",
+        "email": "",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2019-04-10T20:19:33.091Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
     "model": "sessions.session",
     "pk": "1mc8muw3xrarj1epompzq96djx8ksv8w",
     "fields": {
@@ -205,6 +222,14 @@
     "fields": {
         "session_data": "OTIyODNlNTdhMzhlYzQxMGU4ODU0NzVlNTBkZTUzZGQyOWIwMWQyMDp7Il9hdXRoX3VzZXJfaWQiOiI2IiwiX2F1dGhfdXNlcl9iYWNrZW5kIjoiZGphbmdvLmNvbnRyaWIuYXV0aC5iYWNrZW5kcy5Nb2RlbEJhY2tlbmQiLCJfYXV0aF91c2VyX2hhc2giOiJjZWMzNzI3OWNiZTJjMzJmNTdmMmJiNzQ2NjZlNzZlYzI1MDAwMjcyIn0=",
         "expire_date": "2019-04-22T10:30:29.538Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "uee81ymmu1dpz6zgbjrlpx527nya14lq",
+    "fields": {
+        "session_data": "N2Q1NzQ5MjU4YzAxMjE5OTBiZjhiN2ExMmVjMmM0NTc5N2E2Zjk3Yzp7Il9hdXRoX3VzZXJfaWQiOiIxNCIsIl9hdXRoX3VzZXJfYmFja2VuZCI6ImRqYW5nby5jb250cmliLmF1dGguYmFja2VuZHMuTW9kZWxCYWNrZW5kIiwiX2F1dGhfdXNlcl9oYXNoIjoiN2Q1NmZkOWYzZDJiMmI1YWFjOGQ0NzQ1ZjQyYjliMDNjZjhjMzUxMyJ9",
+        "expire_date": "2019-04-24T20:19:35.201Z"
     }
 },
 {
@@ -7686,6 +7711,132 @@
     }
 },
 {
+    "model": "admin.logentry",
+    "pk": 420,
+    "fields": {
+        "action_time": "2019-04-10T20:19:55.435Z",
+        "user": [
+            "admin"
+        ],
+        "content_type": [
+            "events",
+            "event"
+        ],
+        "object_id": "54",
+        "object_repr": "new event5",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 421,
+    "fields": {
+        "action_time": "2019-04-10T20:19:55.593Z",
+        "user": [
+            "admin"
+        ],
+        "content_type": [
+            "events",
+            "event"
+        ],
+        "object_id": "53",
+        "object_repr": "anime",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 422,
+    "fields": {
+        "action_time": "2019-04-10T20:19:55.735Z",
+        "user": [
+            "admin"
+        ],
+        "content_type": [
+            "events",
+            "event"
+        ],
+        "object_id": "52",
+        "object_repr": "event1",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 423,
+    "fields": {
+        "action_time": "2019-04-10T20:19:55.863Z",
+        "user": [
+            "admin"
+        ],
+        "content_type": [
+            "events",
+            "event"
+        ],
+        "object_id": "51",
+        "object_repr": "new event2",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 424,
+    "fields": {
+        "action_time": "2019-04-10T20:19:55.918Z",
+        "user": [
+            "admin"
+        ],
+        "content_type": [
+            "events",
+            "event"
+        ],
+        "object_id": "50",
+        "object_repr": "new event3",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 425,
+    "fields": {
+        "action_time": "2019-04-10T20:19:56.067Z",
+        "user": [
+            "admin"
+        ],
+        "content_type": [
+            "events",
+            "event"
+        ],
+        "object_id": "49",
+        "object_repr": "new event4",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
+    "model": "admin.logentry",
+    "pk": 426,
+    "fields": {
+        "action_time": "2019-04-10T20:19:56.182Z",
+        "user": [
+            "admin"
+        ],
+        "content_type": [
+            "events",
+            "event"
+        ],
+        "object_id": "48",
+        "object_repr": "new event5",
+        "action_flag": 3,
+        "change_message": ""
+    }
+},
+{
     "model": "groups.group_request",
     "pk": 144,
     "fields": {
@@ -7850,296 +8001,6 @@
             "random"
         ],
         "members": []
-    }
-},
-{
-    "model": "events.comment",
-    "pk": 1,
-    "fields": {
-        "event": 51,
-        "by": [
-            "random"
-        ],
-        "text": "this is a comment",
-        "date": "2019-04-04T13:43:29.935Z"
-    }
-},
-{
-    "model": "events.eventreq",
-    "pk": 23,
-    "fields": {
-        "event": 52,
-        "by": [
-            "random"
-        ],
-        "status": true
-    }
-},
-{
-    "model": "events.eventreq",
-    "pk": 32,
-    "fields": {
-        "event": 53,
-        "by": [
-            "random"
-        ],
-        "status": false
-    }
-},
-{
-    "model": "events.eventreq",
-    "pk": 33,
-    "fields": {
-        "event": 51,
-        "by": [
-            "random"
-        ],
-        "status": true
-    }
-},
-{
-    "model": "events.invitation",
-    "pk": 29,
-    "fields": {
-        "event": 49,
-        "sender": [
-            "random"
-        ],
-        "to": [
-            "random"
-        ],
-        "status": true,
-        "msg": "Attend the event"
-    }
-},
-{
-    "model": "events.invitation",
-    "pk": 30,
-    "fields": {
-        "event": 51,
-        "sender": [
-            "random"
-        ],
-        "to": [
-            "random"
-        ],
-        "status": true,
-        "msg": "Attend the event"
-    }
-},
-{
-    "model": "events.invitation",
-    "pk": 31,
-    "fields": {
-        "event": 49,
-        "sender": [
-            "random"
-        ],
-        "to": [
-            "random1"
-        ],
-        "status": true,
-        "msg": "Attend the event"
-    }
-},
-{
-    "model": "events.invitation",
-    "pk": 32,
-    "fields": {
-        "event": 49,
-        "sender": [
-            "riya"
-        ],
-        "to": [
-            "random"
-        ],
-        "status": true,
-        "msg": "Please attend the event"
-    }
-},
-{
-    "model": "events.invitation",
-    "pk": 33,
-    "fields": {
-        "event": 54,
-        "sender": [
-            "random"
-        ],
-        "to": [
-            "random1"
-        ],
-        "status": true,
-        "msg": "klwlkwefe"
-    }
-},
-{
-    "model": "events.invitation",
-    "pk": 34,
-    "fields": {
-        "event": 54,
-        "sender": [
-            "random"
-        ],
-        "to": [
-            "random2"
-        ],
-        "status": true,
-        "msg": "klwlkwefe"
-    }
-},
-{
-    "model": "events.event",
-    "pk": 48,
-    "fields": {
-        "user": [
-            "random"
-        ],
-        "name": "new event5",
-        "description": "something3",
-        "venue": "somewhere",
-        "city": "raipur",
-        "state": "chattisgarh",
-        "private": true,
-        "date": "2018-03-25",
-        "time": "10:01:00",
-        "registered_users": []
-    }
-},
-{
-    "model": "events.event",
-    "pk": 49,
-    "fields": {
-        "user": [
-            "random"
-        ],
-        "name": "new event4",
-        "description": "something3",
-        "venue": "somewhere",
-        "city": "raipur",
-        "state": "chattisgarh",
-        "private": true,
-        "date": "2018-03-25",
-        "time": "10:01:00",
-        "registered_users": [
-            [
-                "random"
-            ]
-        ]
-    }
-},
-{
-    "model": "events.event",
-    "pk": 50,
-    "fields": {
-        "user": [
-            "random"
-        ],
-        "name": "new event3",
-        "description": "something3",
-        "venue": "somewhere",
-        "city": "raipur",
-        "state": "chattisgarh",
-        "private": true,
-        "date": "2018-03-25",
-        "time": "10:01:00",
-        "registered_users": [
-            [
-                "random"
-            ]
-        ]
-    }
-},
-{
-    "model": "events.event",
-    "pk": 51,
-    "fields": {
-        "user": [
-            "random"
-        ],
-        "name": "new event2",
-        "description": "something3",
-        "venue": "somewhere",
-        "city": "raipur",
-        "state": "chattisgarh",
-        "private": true,
-        "date": "2018-03-25",
-        "time": "10:01:00",
-        "registered_users": [
-            [
-                "random"
-            ],
-            [
-                "random2"
-            ],
-            [
-                "random3"
-            ]
-        ]
-    }
-},
-{
-    "model": "events.event",
-    "pk": 52,
-    "fields": {
-        "user": [
-            "random"
-        ],
-        "name": "event1",
-        "description": "something3",
-        "venue": "somewhere",
-        "city": "raipur",
-        "state": "chattisgarh",
-        "private": true,
-        "date": "2018-03-25",
-        "time": "10:01:00",
-        "registered_users": [
-            [
-                "random"
-            ]
-        ]
-    }
-},
-{
-    "model": "events.event",
-    "pk": 53,
-    "fields": {
-        "user": [
-            "chethna"
-        ],
-        "name": "anime",
-        "description": "Animation",
-        "venue": "Japan",
-        "city": "Akihabara",
-        "state": "konoha",
-        "private": true,
-        "date": "2019-04-10",
-        "time": "06:00:00",
-        "registered_users": []
-    }
-},
-{
-    "model": "events.event",
-    "pk": 54,
-    "fields": {
-        "user": [
-            "random"
-        ],
-        "name": "new event5",
-        "description": "ojbjdb",
-        "venue": "akjdb",
-        "city": "akjbda",
-        "state": "akjbd",
-        "private": false,
-        "date": "2018-03-25",
-        "time": "10:01:00",
-        "registered_users": [
-            [
-                "random1"
-            ],
-            [
-                "random2"
-            ]
-        ]
     }
 }
 ]

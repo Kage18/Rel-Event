@@ -23,7 +23,7 @@ SECRET_KEY = 'n5l+bx2qhgnyr*6)9&+unawm621%qoy4m&ttuepa82(#^e-me1'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+# ALLOWED_HOSTS = ['cc0afe9b.ngrok.io',]
 
 # Application definition
 
@@ -31,6 +31,9 @@ INSTALLED_APPS = [
     'events',
     'groups',
     'home',
+    'shop',
+    'chat',
+    'channels',
     'crispy_forms',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -38,7 +41,15 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'paypal.standard.ipn',
+    'fundraiser',
+
+
 ]
+
+PAYPAL_TEST=True
+PAYPAL_RECEIVER_EMAIL = 'vasundhara.s17@iiits.in'
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -69,32 +80,47 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'eventManagement.wsgi.application'
+ASGI_APPLICATION = 'eventManagement.routing.application'
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('127.0.0.1', 6379)],
+        },
+    },
+}
 
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
-#
+
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.sqlite3',
 #         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
 #     }
 # }
+
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'db',
+        'NAME': 'dbi',
         'USER': 'root',
-        'PASSWORD': 'riyamysql',
+        'PASSWORD': 'q1w2e3r4',
         'HOST': 'localhost',   # Or an IP Address that your DB is hosted on
         'PORT': '3306',
     }
+
 }
+
+
 # DATABASES = {
 #     'default': {
 #         'NAME': 'db',
 #         'ENGINE': 'mysql.connector.django',
 #         'USER': 'root',
-#         'PASSWORD': 'q1w2e3r4',
+#         'PASSWORD': 'riyamysql',
 #         'OPTIONS': {
 #           'autocommit': True,
 #         },
@@ -102,7 +128,7 @@ DATABASES = {
 # }
 
 # Password validation
-# https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
+# https://docs.djangoproject.com/en/2.1/ref/settings/#aupip3 install mysql-connect-pythonth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -136,3 +162,19 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR,'static')
+]
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# EMAIL_HOST = 'localhost'
+# EMAIL_PORT = 1025
+
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'projectcirclr@gmail.com'
+EMAIL_HOST_PASSWORD = 'circlr@147'
+EMAIL_PORT = 587
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'

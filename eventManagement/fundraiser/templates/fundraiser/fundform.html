@@ -1,0 +1,14 @@
+
+ {% extends 'home/base.html' %}
+
+{% block body %}
+<br><br><br><br><br>
+<div class="w3-container" style="float: middle;width: 30%;height: 40%;background-color: white;margin-left: 160px;padding: 20px;">
+    <form method="post" action="{% url 'payment-button' %}">{% csrf_token %}
+        <input type="hidden" name="eventname" value="{{ eventname }}">
+    Username:<input type="text" name="username" value="{{ username }}"><br><br>
+    Amount:<input type="number" name="amount"><br><br>
+        <button type="submit" value="Pay now">PAY NOW</button>
+    </form>
+</div>
+ {% endblock %}

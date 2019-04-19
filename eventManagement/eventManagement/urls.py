@@ -15,11 +15,30 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.contrib.auth.views import PasswordResetCompleteView
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+from django.conf.urls.static import static
+from django.conf import settings
+from fundraiser import views as pay
+
 
 urlpatterns = [
+    path('reset/done/', PasswordResetCompleteView.as_view(template_name="home/reset_password_complete.html"), name="password_reset_complete"),
     path('admin/', admin.site.urls),
     #path('home/', include('home.urls')),
     path('home/', include('home.urls')),
     path('events/', include('events.urls')),
-    path('groups/',include('groups.urls'))
+    path('groups/',include('groups.urls')),
+    path('shop/', include('shop.urls')),
+    path('chat/', include('chat.urls')),
+    path('fundraiser/', include('fundraiser.urls')),
+    path('paypal/', include('paypal.standard.ipn.urls')),
+    path('payment-button/', pay.payment_button, name='payment-button'),
+    path('payment-done/', pay.payment_done, name='payment_done'),
+    path('payment-cancelled/', pay.payment_cancelled, name='payment_cancelled'),
+
 ]
+
+
+urlpatterns += staticfiles_urlpatterns()
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

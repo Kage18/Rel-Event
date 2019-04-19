@@ -1,4 +1,15 @@
+{% extends 'home/base.html' %}
 
+{% load crispy_forms_tags %}
+{% load staticfiles %}
+{% block title %}
+
+{#        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"#}
+{#          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">#}
+
+{% endblock %}
+{% block body %}
+    <div style="height: 200px;"></div>
 <h1>Create</h1>
 <form action="{% url 'events:createevent' %}" method="post">
     {% csrf_token %}
@@ -6,3 +17,11 @@
 {#    {{ invitation }}#}
     <center><input type="submit" value="Submit"></center>
 </form>
+
+
+{% endblock %}
+
+
+delimiter //
+create trigger event_review after insert on events_review for each row begin update events_event_archive set rating = (select avg(rating) from events_review where event_id = NEW.event_id) where id=NEW.event_id; end;//
+delimiter;

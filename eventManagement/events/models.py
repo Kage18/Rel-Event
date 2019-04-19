@@ -1,8 +1,13 @@
 from django.db import models
 from django.contrib.auth.models import User
-
+from shop.models import Product
+from datetime import datetime
+# from django.utils.timezone
+import django.utils.timezone as p
 
 # Create your models here.
+
+
 class event(models.Model):
     user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL, related_name='user')
     name = models.CharField(max_length=50)
@@ -10,15 +15,50 @@ class event(models.Model):
     venue = models.CharField(max_length=100)
     city = models.CharField(max_length=20)
     state = models.CharField(max_length=20)
-    registered_users = models.ManyToManyField(User, related_name='registered_user',null=True,blank=True)
+    # registered_users = models.ForeignKey(regUser, related_name='registered_user',null=True,blank=True,on_delete=models.CASCADE)
     private = models.BooleanField(default=False)
-    date = models.DateField()
-    time = models.TimeField()
-
+    start_date = models.DateField(default = p.now())
+    start_time = models.TimeField()
+    end_date = models.DateField(db_index=True)
+    end_time = models.TimeField(null= True)
+    product = models.ManyToManyField(Product, blank=True, null=True)
 
     def __str__(self):
         return self.name
 
+
+class regUser(models.Model):
+    user = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
+    event = models.ForeignKey(event, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.user.username + " :" + self.event.name
+
+class event_archive(models.Model):
+    id = models.PositiveIntegerField(primary_key=True)
+    created_by = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
+    ev_name = models.CharField(max_length=50)
+    ev_description = models.CharField(max_length=150)
+    ev_venue = models.CharField(max_length=100)
+    ev_city = models.CharField(max_length=20)
+    ev_state = models.CharField(max_length=20)
+    #ev_registered_users = models.ManyToManyField(User, related_name='ev_registered_user', null=True, blank=True)
+    ev_private = models.BooleanField(default=False)
+    ev_start_date = models.DateField(default=p.now())
+    ev_start_time = models.TimeField()
+    ev_end_date = models.DateField(db_index=True)
+    ev_end_time = models.TimeField(null=True)
+    rating = models.PositiveSmallIntegerField(null=True, default=0)
+
+    def __str__(self):
+        return self.ev_name
+
+class event_archive_regUser(models.Model):
+    user = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
+    event = models.ForeignKey(event_archive, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.user.username + " :" + self.event.ev_name
 
 class invitation(models.Model):
     event = models.ForeignKey(event, null=True, on_delete=models.CASCADE)
@@ -38,10 +78,13 @@ class eventreq(models.Model):
     def __str__(self):
         return self.event.name+'--'+self.by.username
 
-class comment(models.Model):
-    event = models.ForeignKey(event, null=True, on_delete=models.CASCADE)
+class review(models.Model):
     by = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
     text = models.CharField(max_length=140)
-    date = models.DateTimeField(auto_now=True)
+    date = models.DateTimeField(default = p.now())
+    rating = models.PositiveSmallIntegerField(null=True,default=0)
+    event = models.ForeignKey(event_archive, null=True, on_delete=models.CASCADE)
 
+    def __str__(self):
+        return self.by.username + " :" + self.event.ev_name
 

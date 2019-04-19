@@ -1,7 +1,40 @@
 {% extends 'home/base.html' %}
 {% load static %}
-{% block title %}
+{% block head %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDU_kJ3UUPCV-HLOaTfDf9zfqBBAXQ0VHE&callback=initMap">
+    </script>
+    <style>
+      /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+      #map {
+        {#height: 100%;#}
+         height:400px;
+          width:600px;
+      }
+      /* Optional: Makes the sample page fill the window. */
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+      #floating-panel {
+        position: absolute;
+        top: 10px;
+        left: 25%;
+        z-index: 5;
+        background-color: #fff;
+        padding: 5px;
+        border: 1px solid #999;
+        text-align: center;
+        font-family: 'Roboto','sans-serif';
+        line-height: 30px;
+        padding-left: 10px;
 
+      }
+    </style>
 {% endblock %}
 
 {% block body %}
@@ -27,19 +60,76 @@
             <td>{{ e.date }}</td>
             <td>{{ e.time }}</td>
             <td>
-                {% if sent %}
-                    {% if sentreq.status %}
-                        Going
-                    {% else %}
-                        Pending
-                    {% endif %}
-
+                {% if invite %}
+                    {% for i in invite %}
+                    {% if i.status == False %}
+                        <a href="{% url 'events:accept' i.id %}">Accept</a>
+                    {% else %}going{% endif %}
+                    {% endfor %}
                 {% else %}
-                    <button type="submit" class="r" k="{{ e.id }}">send</button>
+                    {% if sent %}
+                        {% if sentreq.status %}
+                            Going
+                        {% else %}
+                            Pending
+                        {% endif %}
+
+                    {% else %}
+                        <button type="submit" class="r" k="{{ e.id }}">send</button>
+                    {% endif %}
                 {% endif %}
             </td>
         </tr>
     </table>
+    <script>
+
+        var address = '';
+        {#address = '{{ e.venue }}' + ',' + '{{ e.city }}' + ',' + {{ e.state }};#}
+    </script>
+
+{#    <div id="floating-panel">#}
+{#      <input id="address" type="textbox" value="Sydney, NSW">#}
+{#      <input id="submit" type="button" value="Geocode">#}
+{#    </div>#}
+    <div id="map"></div>
+    <script>
+      function initMap() {
+        var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 5,
+          //center: {lat: -34.397, lng: 150.644}
+          center: new google.maps.LatLng(28, 77),
+
+        });
+        //var geocoder = new google.maps.Geocoder();
+
+        //document.getElementById('submit').addEventListener('click', function() {
+          //geocodeAddress(geocoder, map);
+        var geocoder = new google.maps.Geocoder();
+        var add = '{{ e.venue }}' + ',' + '{{ e.city }}' + ',' + '{{ e.state }}';
+        geocodeAddress(geocoder,map);
+
+        //});
+      }
+
+      function geocodeAddress(geocoder, resultsMap) {
+        //var address = document.getElementById('address').value;
+        var address = '{{ e.venue }}' + ',' +  '{{ e.city }}' + ',' + '{{ e.state }}';
+            geocoder.geocode({'address': address}, function(results, status) {
+          if (status === 'OK') {
+            resultsMap.setCenter(results[0].geometry.location);
+            var marker = new google.maps.Marker({
+              map: resultsMap,
+              position: results[0].geometry.location
+            });
+          } else {
+            alert('Geocode was not successful for the following reason: ' + status);
+          }
+        });
+      }
+    </script>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDU_kJ3UUPCV-HLOaTfDf9zfqBBAXQ0VHE&callback=initMap">
+    </script>
     {% csrf_token %}
     <script>
         $(".r").click(function () {

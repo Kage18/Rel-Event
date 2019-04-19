@@ -1,12 +1,12 @@
 from django import forms
-from .models import event,invitation,comment
+from .models import event,invitation,review
 from django.contrib.auth.models import User
 
 
 class EventForm(forms.ModelForm):
-    # CHOICES = [[x.id, x.username] for x in User.objects.all()]
-    # invite_users = forms.MultipleChoiceField(widget=forms.SelectMultiple, choices=CHOICES)
-    # message=forms.CharField(max_length=100)
+    CHOICES = [[x.id, x.username] for x in User.objects.all()]
+    invite_users = forms.MultipleChoiceField(widget=forms.SelectMultiple, choices=CHOICES)
+    message = forms.CharField(max_length=100)
 
     class Meta:
         model = event
@@ -25,8 +25,10 @@ class EventForm(forms.ModelForm):
         f.city = self.cleaned_data['city']
         f.state = self.cleaned_data['state']
         f.private = self.cleaned_data['private']
-        f.date = self.cleaned_data['date']
-        f.time = self.cleaned_data['time']
+        f.start_date = self.cleaned_data['start_date']
+        f.start_time = self.cleaned_data['start_time']
+        f.end_date = self.cleaned_data['end_date']
+        f.end_time = self.cleaned_data['end_time']
         if commit:
             f.save()
 
@@ -34,10 +36,10 @@ class EventForm(forms.ModelForm):
 
 
 
-class CommentForm(forms.ModelForm):
+class ReviewForm(forms.ModelForm):
 
 
     class Meta:
-        model = comment
+        model = review
         fields = '__all__'
-        exclude = ['by']
+        exclude = ['by', 'event','rating','date']

@@ -1,10 +1,19 @@
-
+{% extends 'home/base.html' %}
+{% load crispy_forms_tags %}
+{% block body %}
+<br><br><br><br>
+<div class="" style="padding-left:40px;padding-right:1000px">
 <h1>Log in</h1>
+
 <form class="site-form" action="{% url 'home:login' %}" method="post">
     {% csrf_token %}
-    {{ form }}
+    {{ form|crispy }}
     {% if request.GET.next %}
         <input type="hidden" name="next" value="{{ request.GET.next }}">
     {% endif %}
-    <input type="submit" value="Login">
+    <input type="submit" value="Login"><br><br>
+    Don't have an account? <a href="{% url 'home:signup' %}"> Sign Up </a><br>
+    <a href="{% url 'home:password_reset' %}">Forgot Password?</a>
 </form>
+</div>
+{% endblock %}

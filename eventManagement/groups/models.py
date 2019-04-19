@@ -10,6 +10,8 @@ class Group(models.Model):
     creator = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
     members = models.ManyToManyField(User, blank=True, related_name='members')
 
+    def __str__(self):
+        return self.name
 
 class Group_invite(models.Model):
 
@@ -17,11 +19,17 @@ class Group_invite(models.Model):
     to = models.ForeignKey(User, related_name="invitedtogroup",null=True,  blank=True, on_delete=models.CASCADE)
     status = models.BooleanField(default=False)
 
+    def __str__(self):
+        return self.group.name + " " + self.to.username
 
 class Group_request(models.Model):
     group = models.ForeignKey(Group, null=True, on_delete=models.CASCADE)
     request_from = models.ForeignKey(User, related_name="requestgroup", null=True, blank=True, on_delete=models.CASCADE)
     request_status = models.IntegerField(default=0)
+
+    def __str__(self):
+        return self.group.name + " " + self.request_from.username
+
     #0: for not yet accepted
     #1: accepted
     #2: declined

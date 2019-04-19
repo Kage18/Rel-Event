@@ -1,0 +1,12 @@
+{% extends 'home/base.html' %}
+{% block body %}
+<br><br><br><br><br>
+<div style="padding-left:40px">
+<h1>Email Confirmation Sent</h1>
+  <p><br>
+    We've emailed you a link to verify your account.<br>
+    If an account with the email you entered exists, then you should receive it shortly.
+  </p>
+  <a href="{% url 'home:index' %}">Return to homepage</a>
+</div>
+{% endblock %}
