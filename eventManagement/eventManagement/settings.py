@@ -107,7 +107,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'dbi',
         'USER': 'root',
-        'PASSWORD': 'q1w2e3r4',
+        'PASSWORD': 'riyamysql',
         'HOST': 'localhost',   # Or an IP Address that your DB is hosted on
         'PORT': '3306',
     }
