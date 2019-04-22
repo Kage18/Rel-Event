@@ -60,24 +60,38 @@
             <td>{{ e.date }}</td>
             <td>{{ e.time }}</td>
             <td>
-                {% if invite %}
-                    {% for i in invite %}
-                    {% if i.status == False %}
-                        <a href="{% url 'events:accept' i.id %}">Accept</a>
-                    {% else %}going{% endif %}
-                    {% endfor %}
-                {% else %}
-                    {% if sent %}
+{#                {% if invite %}#}
+{#                    {% for i in invite %}#}
+{#                    {% if i.status == False %}#}
+{#                        <a href="{% url 'events:accept' i.id %}">Accept</a>#}
+{#                    {% else %}going{% endif %}#}
+{#                    {% endfor %}#}
+{#                {% else %}#}
+{#                    {% if sent == 1%}#}
+{#                        {% if sentreq.status %}#}
+{#                            Going#}
+{#                        {% else %}#}
+{#                            Pending#}
+{#                        {% endif %}#}
+{##}
+{#                    {% elif sent == 0 %}#}
+{#                        <button type="submit" class="r" k="{{ e.id }}">send</button>#}
+{#                    {% endif %}#}
+{#                {% endif %}#}
+
+                    {% if sent == 1%}
                         {% if sentreq.status %}
                             Going
                         {% else %}
                             Pending
                         {% endif %}
 
-                    {% else %}
+                    {% elif sent == 0 %}
                         <button type="submit" class="r" k="{{ e.id }}">send</button>
+                    {% else %}
+                        You are an admin of this event
                     {% endif %}
-                {% endif %}
+
             </td>
         </tr>
     </table>
@@ -116,11 +130,22 @@
         var address = '{{ e.venue }}' + ',' +  '{{ e.city }}' + ',' + '{{ e.state }}';
             geocoder.geocode({'address': address}, function(results, status) {
           if (status === 'OK') {
+              var infowindow = new google.maps.InfoWindow({});
+
             resultsMap.setCenter(results[0].geometry.location);
             var marker = new google.maps.Marker({
               map: resultsMap,
-              position: results[0].geometry.location
+              position: results[0].geometry.location,
+                title: '{{ e.venue }}' + ',' + '{{ e.city }}' + ',' + '{{ e.state }}'
+
             });
+
+            google.maps.event.addListener(marker, 'click', (function (marker) {
+                                return function () {
+                                    infowindow.setContent('{{ e.venue }}' + ',' + '{{ e.city }}' + ',' + '{{ e.state }}');
+                                    infowindow.open(map, marker);
+                                }
+                            })(marker));
           } else {
             alert('Geocode was not successful for the following reason: ' + status);
           }
@@ -155,5 +180,79 @@
             });
         });
     </script>
-    <h1>LALALA</h1>
+    {% if flag == 1 %}
+        <h2>Requests to join this event:</h2>
+        {% for i in eventreq %}
+{#            <h3>Lalal<br></h3>#}
+            <ol>
+            {% if i.status == False %}
+                <ul>
+                    <li>{{ i.event.name }}
+                   {{ i.by }}<button class="acceptreq" reqid="{{ i.id }}">Accept</button></li>
+                </ul>
+            {% endif %}
+            </ol>
+        {% endfor %}
+
+        <h3>Guests in this event:</h3>
+        <ul>
+
+            {% for i in guests %}
+                <li>{{ i.user.username }}<button class="deleteguest" reqid="{{ i.user.id }}" eventid="{{ e.id }}">Delete this guest</button></li>
+
+            {% endfor %}
+         </ul>
+
+
+
+    {% endif %}
+
+
+    <script>
+
+        $(".acceptreq").click(function () {
+            console.log('jskdnfls');
+            let td = $(this).parent();
+            $.ajax({
+                type: 'POST',
+                url: '{% url "events:acceptreq" %}',
+                data: {
+                    csrfmiddlewaretoken: '{{ csrf_token }}',
+                    pk: $(this).attr("reqid"),
+                },
+                success: function (data) {
+                    $(td).html(data);
+
+                },
+
+                error: function (jqXHR, textStatus, errorThrown) {
+                    alert(errorThrown);
+                }
+
+            });
+        });
+
+         $(".deleteguest").click(function () {
+            console.log('jskdnfls');
+            let td = $(this).parent();
+            $.ajax({
+                type: 'POST',
+                url: '{% url "events:deleteguest" %}',
+                data: {
+                    csrfmiddlewaretoken: '{{ csrf_token }}',
+                    pk: $(this).attr("reqid"),
+                    eventid: $(this).attr("eventid"),
+                },
+                success: function (data) {
+                    $(".deleteguest").html(data);
+
+                },
+
+                error: function (jqXHR, textStatus, errorThrown) {
+                    alert(errorThrown);
+                }
+
+            });
+        });
+    </script>
 {% endblock %}

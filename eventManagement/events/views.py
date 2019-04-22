@@ -57,13 +57,27 @@ def EventDetails(request, pk):
                                    [pk, request.user.id])
     invite = invitation.objects.raw("select * from events_invitation where event_id = %s and to_id = %s",
                                     [pk, request.user.id])
-
+    flag = 0
     sent = 1
+    admin = event.objects.get(id=pk).user.id
+    print(admin)
+    if request.user.id == admin:
+        flag = 1
+        e = event.objects.get(id=pk)
+        eventrequest = eventreq.objects.filter(event=e)
+        print(eventrequest)
+        guests = regUser.objects.filter(event=e)
+        print(guests)
+        return render(request, 'events/details.html',
+                      {'e': e, 'sent': 2, 'invite': invite, 'flag': flag, 'eventreq': eventrequest,'guests':guests})
+
     if len(sentreq) == 0:
         sent = 0
-        return render(request, 'events/details.html', {'e': e, 'sent': sent , 'invite': invite})
+        return render(request, 'events/details.html', {'e': e, 'sent': sent , 'invite': invite,'flag':flag})
 
-    return render(request, 'events/details.html', {'e': e, 'sent': sent, 'sentreq': sentreq[0]})
+
+
+    return render(request, 'events/details.html', {'e': e, 'sent': sent, 'sentreq': sentreq[0],'flag':flag})
 
 
 def PastEventDetails(request, pk):
@@ -126,6 +140,22 @@ def acceptreq(request):
             #                [req.event_id, req.by_id])
             cursor.close()
         return render(request, 'events/reqaccept.html')
+
+
+def deleteguest(request):
+    if request.POST:
+        pk = request.POST["pk"]
+        eventid = request.POST["eventid"]
+        ev = event.objects.get(id=eventid)
+        us = User.objects.get(id=pk)
+        print(regUser.objects.get(event=ev,user=us))
+        with connection.cursor() as cursor:
+            cursor.execute("DELETE from events_reguser WHERE event_id = %s AND user_id = %s", [eventid, pk])
+            # req = eventreq.objects.raw('select * from events_eventreq where id = %s', [pk])[0]
+            # cursor.execute("INSERT INTO events_event_registered_users(event_id, user_id) VALUES( %s , %s )",
+            #                [req.event_id, req.by_id])
+            cursor.close()
+        return render(request, 'events/deleteguest.html')
 
 
 def comment(request):

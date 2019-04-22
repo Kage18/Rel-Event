@@ -12,6 +12,8 @@ urlpatterns = [
     path('pastdetail/<int:pk>', views.PastEventDetails,name='pasteventdetails'),
     path('send/', views.send, name='send'),
     path('acceptreq/', views.acceptreq, name='acceptreq'),
+    path('deleteguest/', views.deleteguest, name='deleteguest'),
+
     path('pastevents/', views.pastevents, name='pastevents'),
 
 ]

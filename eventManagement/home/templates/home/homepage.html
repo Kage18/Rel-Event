@@ -323,6 +323,7 @@
     </ul>
 
 
+
     <h3>Pending requests:</h3>
     <ul>
         {% for i in sent_group_requests %}
@@ -642,9 +643,12 @@ function openNav() {
     <script>
      var address = []
      var labels=[]
+         var ids=[]
+
     </script>
 {% for event in events %}
     <script>
+    ids.push({{ event.id }});
         labels.push('{{ event.name }}');
         address.push('{{ event.venue }}' + ', ' +  '{{ event.city }}' + ', ' +  '{{ event.state }}')</script>
 
@@ -671,14 +675,15 @@ function openNav() {
                             var geocoder = new google.maps.Geocoder();
                             var add = address[i];
                             var label = labels[i];
-                            geocodeAddress(geocoder,map,add,label);
+                            var id = ids[i];
+                            geocodeAddress(geocoder,map,add,label,id);
 
                         }
 
         //});
       }
 
-      function geocodeAddress(geocoder, resultsMap, add, label) {
+      function geocodeAddress(geocoder, resultsMap, add, label,id) {
         //var address = document.getElementById('address').value;
                 {#var address = '{{ e.venue }}' + ',' +  '{{ e.city }}' + ',' + '{{ e.state }}';#}
                     var address = add;
@@ -689,12 +694,15 @@ function openNav() {
                     var marker = new google.maps.Marker({
                       map: resultsMap,
                       position: results[0].geometry.location,
-                      title: 'Hello'
+                      title: label,
+                      url: 'http://127.0.0.1:8000/events/detail/' + id
                     });
                     google.maps.event.addListener(marker, 'click', (function (marker) {
                                 return function () {
                                     infowindow.setContent(label);
                                     infowindow.open(map, marker);
+                                        window.location.href = this.url;
+
                                 }
                             })(marker));
 
