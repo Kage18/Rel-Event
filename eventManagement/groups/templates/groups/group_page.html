@@ -11,16 +11,32 @@
     <h3>Group Details</h3>
 <h4>{{ grp.description }}</h4>
 
-{% if flag == 0 %}
-    Here
-<button class="r" type='submit' k='{{ grp.id }}'>Send request</button>
-    <p id="write"></p>
-    {% elif flag == 1 %}
-        <button>Requested</button>
-    {% elif flag == 2%}
-            <button>You are a member of this group</button>
+{#{% if flag == 0 %}#}
+{#    Here#}
+{#<button class="r" type='submit' k='{{ grp.id }}'>Send request</button>#}
+{#    <p id="write"></p>#}
+{#    {% elif flag == 1 %}#}
+{#        <button>Requested</button>#}
+{#    {% elif flag == 2%}#}
+{#            <button>You are a member of this group</button>#}
+{#    {% elif flag == 3%}#}
+{#            <button>You are the admin of this group</button>#}
+{#{% endif %}#}
 
+{% if flag == 1 %}
+    <button class="r" type='submit' k='{{ grp.id }}'>Send request</button>
+    <p id="write"></p>
 {% endif %}
+
+{% if admin_flg == 1 %}
+    You are the admin of this group
+{% elif mem_flg == 1 %}
+    You are already a member of this group
+{% elif req_flg == 1 %}
+    Request is on its way !
+{% endif %}
+
+
 <script src="jquery-3.3.1.min.js"></script>
 <script>
    $(".r").click(function () {

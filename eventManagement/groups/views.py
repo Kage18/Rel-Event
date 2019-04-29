@@ -88,21 +88,55 @@ def accept_invite(request, pk):
 def grp_page(request,pk):
     grp = Group.objects.raw('select * from groups_group where id = %s',[pk])
     print(grp[0])
-    if pk:
-        k = Group.objects.raw(
+    admin_flg = 0
+    mem_flg = 0
+    req_flag = 0
+    flag = 1
+    dec_flg = 0
+    inv_flg = 0
+    try:
+        req_check = Group.objects.raw(
             'select * from groups_group where id=%s and id in(select group_id as id from groups_group_request where request_from_id = %s and request_status=%s)',[pk,request.user.id,0])
 
-        l = Group.objects.raw("select * from groups_group where id=%s and id in(select group_id as id from groups_group_members where user_id = %s)",[pk,request.user.id])
+        invite_check = Group.objects.raw(
+            'select * from groups_group where id=%s and id in(select group_id as id from groups_group_invite where to_id = %s and request_status=%s)',
+            [pk, request.user.id, False])
 
-        if(len(k)):
-            print("Request has already been sent")
-            return render(request,"groups/group_page.html",{'flag':1,'grp':grp[0]})
+        decline_req_check = Group.objects.raw(
+            'select * from groups_group where id=%s and id in(select group_id as id from groups_group_request where request_from_id = %s and request_status=%s)',
+            [pk, request.user.id, 2])
+
+        mem_check = Group.objects.raw("select * from groups_group where id=%s and id in(select group_id as id from groups_group_members where user_id = %s)",[pk,request.user.id])
+
+        admin_check = Group.objects.raw("select * from groups_group where id=%s and id in(select group_id as id from groups_group_members where creator_id = %s)",[pk,request.user.id])
 
 
-        if (len(l)):
+        if(len(admin_check)):
+            admin_flg = 1
+            flag = 0
+
+        elif (len(mem_check)):
             print("Already a member")
+            mem_flg = 1
+            flag = 0
 
-            return render(request, "groups/group_page.html", {'flag': 2,'grp':grp[0]})
+
+        elif(len(req_check)):
+            print("Request has already been sent")
+            req_flag = 1
+            flag = 0
+
+        elif (len(decline_req_check)):
+            print("Request has been declined")
+            dec_flg = 1
+            flag = 0
+
+
+        return render(request, "groups/group_page.html", {'req_flg':req_flag,'admin_flg':admin_flg,'mem_flg':mem_flg,'dec_flg':dec_flg,'flag':flag,'grp':grp[0]})
+
+    except:
+        render(request,'groups/not_found.html')
+
     print("Sending")
     return render(request,"groups/group_page.html",{'flag':0,'grp':grp[0]})
 
