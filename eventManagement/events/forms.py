@@ -1,5 +1,5 @@
 from django import forms
-from .models import event,invitation,review
+from .models import event,invitation,review,categories
 from django.contrib.auth.models import User
 
 
@@ -7,6 +7,7 @@ class EventForm(forms.ModelForm):
     CHOICES = [[x.id, x.username] for x in User.objects.all()]
     invite_users = forms.MultipleChoiceField(widget=forms.SelectMultiple, choices=CHOICES)
     message = forms.CharField(max_length=100)
+
     # end_date = forms.DateField(input_formats=['%d-%m-%Y'])
     # start_date = forms.DateField(input_formats=['%d-%m-%Y'])
     class Meta:

@@ -31,12 +31,13 @@ def eventView(request):
     if request.method == 'POST':
         form = EventForm(request.POST)
         if form.is_valid():
+            category = categories.objects.get(name=form.cleaned_data['categories'])
             with connection.cursor() as cursor:
                 cursor.execute(
-                    "INSERT INTO events_event (start_date,start_time,end_date,end_time,description,city,state,private,venue,name,user_id) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",
+                    "INSERT INTO events_event (start_date,start_time,end_date,end_time,description,city,state,private,venue,name,user_id,categories_id) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",
                     [form.cleaned_data['start_date'],(str)(form.cleaned_data['start_time']),form.cleaned_data['end_date'], (str)(form.cleaned_data['end_time']),form.cleaned_data['description'],
                      form.cleaned_data['city'], form.cleaned_data['state'], form.cleaned_data['private'],
-                     form.cleaned_data['venue'], form.cleaned_data['name'], request.user.id])
+                     form.cleaned_data['venue'], form.cleaned_data['name'], request.user.id,category.id])
                 eid = cursor.lastrowid
                 cursor.close()
 
