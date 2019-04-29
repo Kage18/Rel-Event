@@ -4,7 +4,7 @@ from shop.models import Product
 from datetime import datetime
 # from django.utils.timezone
 import django.utils.timezone as p
-
+from django.core.exceptions import ValidationError
 # Create your models here.
 class categories(models.Model):
     name = models.CharField(max_length=100)
@@ -30,6 +30,10 @@ class event(models.Model):
 
     def __str__(self):
         return self.name
+
+    def clean(self):
+        if self.end_date < self.start_date or ((self.end_date == self.start_date) and self.end_time <= self.start_time):
+            raise ValidationError('Ending must be after starting')
 
 
 class regUser(models.Model):

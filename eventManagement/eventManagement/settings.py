@@ -107,25 +107,12 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'dbi',
         'USER': 'root',
-        'PASSWORD': 'riyamysql',
+        'PASSWORD': 'q1w2e3r4',
         'HOST': 'localhost',   # Or an IP Address that your DB is hosted on
         'PORT': '3306',
     }
 
 }
-
-
-# DATABASES = {
-#     'default': {
-#         'NAME': 'db',
-#         'ENGINE': 'mysql.connector.django',
-#         'USER': 'root',
-#         'PASSWORD': 'riyamysql',
-#         'OPTIONS': {
-#           'autocommit': True,
-#         },
-#     }
-# }
 
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#aupip3 install mysql-connect-pythonth-password-validators
