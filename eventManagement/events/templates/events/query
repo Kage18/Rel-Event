@@ -109,8 +109,8 @@ ON SCHEDULE EVERY 1 SECOND
 DO
 BEGIN
 
-INSERT INTO dbi.events_event_archive(id,created_by_id,ev_name,ev_description,ev_venue,ev_city,ev_state,ev_private,ev_start_date,ev_start_time,ev_end_date,ev_end_time,rating)
-SELECT events_event.id,events_event.user_id,events_event.name,events_event.description,events_event.venue,events_event.city,events_event.state,events_event.private,events_event.start_date,events_event.start_time,events_event.end_date,events_event.end_time,0 FROM dbi.events_event
+INSERT INTO dbi.events_event_archive(id,categories_id,created_by_id,ev_name,ev_description,ev_venue,ev_city,ev_state,ev_private,ev_start_date,ev_start_time,ev_end_date,ev_end_time,rating)
+SELECT events_event.id,events_event.categories_id,events_event.user_id,events_event.name,events_event.description,events_event.venue,events_event.city,events_event.state,events_event.private,events_event.start_date,events_event.start_time,events_event.end_date,events_event.end_time,0 FROM dbi.events_event
     WHERE (
 (curdate() > events_event.end_date)  OR
 (
@@ -125,23 +125,23 @@ dbi.events_event_archive_reguser(event_id,user_id)
 SELECT
 events_reguser.event_id,events_reguser.user_id FROM dbi.events_reguser
 WHERE events_reguser.event_id in(SELECT events_event.id FROM events_event WHERE (
-(curdate() > events_event.end_date)  OR 
-( 
-    (curdate() = events_event.end_date) AND 
-    
+(curdate() > events_event.end_date)  OR
+(
+    (curdate() = events_event.end_date) AND
+
     (curtime() > events_event.end_time)
 )
 )
 
 );
 
-    
+
 DELETE FROM dbi.events_reguser
 WHERE events_reguser.event_id in(SELECT events_event.id FROM events_event WHERE (
-(curdate() > events_event.end_date)  OR 
-( 
-    (curdate() = events_event.end_date) AND 
-    
+(curdate() > events_event.end_date)  OR
+(
+    (curdate() = events_event.end_date) AND
+
     (curtime() > events_event.end_time)
 )
 )
@@ -151,10 +151,10 @@ WHERE events_reguser.event_id in(SELECT events_event.id FROM events_event WHERE 
 
 DELETE FROM dbi.events_invitation
 WHERE events_invitation.event_id in(SELECT events_event.id FROM events_event WHERE (
-(curdate() > events_event.end_date)  OR 
-( 
-    (curdate() = events_event.end_date) AND 
-    
+(curdate() > events_event.end_date)  OR
+(
+    (curdate() = events_event.end_date) AND
+
     (curtime() > events_event.end_time)
 )
 )
@@ -163,10 +163,10 @@ WHERE events_invitation.event_id in(SELECT events_event.id FROM events_event WHE
 
 DELETE FROM dbi.events_eventreq
 WHERE events_eventreq.event_id in(SELECT events_event.id FROM events_event WHERE (
-(curdate() > events_event.end_date)  OR 
-( 
-    (curdate() = events_event.end_date) AND 
-    
+(curdate() > events_event.end_date)  OR
+(
+    (curdate() = events_event.end_date) AND
+
     (curtime() > events_event.end_time)
 )
 )
@@ -175,10 +175,10 @@ WHERE events_eventreq.event_id in(SELECT events_event.id FROM events_event WHERE
 
 DELETE FROM dbi.fundraiser_eventdeet
 WHERE fundraiser_eventdeet.eventname_id in(SELECT events_event.id FROM events_event WHERE (
-(curdate() > events_event.end_date)  OR 
-( 
-    (curdate() = events_event.end_date) AND 
-    
+(curdate() > events_event.end_date)  OR
+(
+    (curdate() = events_event.end_date) AND
+
     (curtime() > events_event.end_time)
 )
 )
@@ -187,10 +187,10 @@ WHERE fundraiser_eventdeet.eventname_id in(SELECT events_event.id FROM events_ev
 
 DELETE FROM dbi.events_event_product
 WHERE events_event_product.event_id in(SELECT events_event.id FROM events_event WHERE (
-(curdate() > events_event.end_date)  OR 
-( 
-    (curdate() = events_event.end_date) AND 
-    
+(curdate() > events_event.end_date)  OR
+(
+    (curdate() = events_event.end_date) AND
+
     (curtime() > events_event.end_time)
 )
 )
@@ -200,16 +200,16 @@ WHERE events_event_product.event_id in(SELECT events_event.id FROM events_event 
 
 DELETE FROM dbi.events_event
 WHERE (
-(curdate() > events_event.end_date)  OR 
-( 
-    (curdate() = events_event.end_date) AND 
-    
+(curdate() > events_event.end_date)  OR
+(
+    (curdate() = events_event.end_date) AND
+
     (curtime() > events_event.end_time)
 )
 );
 
 END //
-DELIMITER ; 
+DELIMITER ;
 
 
 

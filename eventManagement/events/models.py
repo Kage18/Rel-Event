@@ -21,7 +21,6 @@ class event(models.Model):
     venue = models.CharField(max_length=100)
     city = models.CharField(max_length=20)
     state = models.CharField(max_length=20)
-    # registered_users = models.ForeignKey(regUser, related_name='registered_user',null=True,blank=True,on_delete=models.CASCADE)
     private = models.BooleanField(default=False)
     start_date = models.DateField(default = p.now())
     start_time = models.TimeField()
@@ -42,6 +41,7 @@ class regUser(models.Model):
 
 class event_archive(models.Model):
     id = models.PositiveIntegerField(primary_key=True)
+    categories = models.ForeignKey(categories, null=True, on_delete=models.SET_NULL, blank=True)
     created_by = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
     ev_name = models.CharField(max_length=50)
     ev_description = models.CharField(max_length=150)
