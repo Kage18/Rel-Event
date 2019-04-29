@@ -94,40 +94,6 @@ def dashboard(request):
                    'eventreq': eventrequest})
 
 
-# def signup_view(request):
-#     if request.method == 'POST':
-#         form = UserCreationForm(request.POST)
-#         if form.is_valid():
-#             user = form.save()
-#             login(request, user)
-#             return redirect('home:dashboard')
-#     else:
-#         form = UserCreationForm()
-#     return render(request, 'home/signup.html', {'form': form})
-#
-#
-# def login_view(request):
-#     if request.method == 'POST':
-#         form = AuthenticationForm(data=request.POST)
-#         if form.is_valid():
-#             user = form.get_user()
-#             login(request, user)
-#             if 'next' in request.POST:
-#                 return redirect(request.POST.get('next'))
-#             else:
-#                 return redirect('home:dashboard')
-#     else:
-#         form = AuthenticationForm()
-#     return render(request, 'home/login.html', {'form': form})
-#
-#
-# def logout_view(request):
-#     if request.method == 'POST':
-#         logout(request)
-#         return redirect('home:index')
-#     else:
-#         logout(request)
-#         return redirect('home:index')
 
 def signup_view(request):
     if request.method == 'POST':

@@ -6,9 +6,15 @@ from datetime import datetime
 import django.utils.timezone as p
 
 # Create your models here.
+class categories(models.Model):
+    name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
 
 
 class event(models.Model):
+    categories = models.ForeignKey(categories, null=True, on_delete=models.SET_NULL, blank=True)
     user = models.ForeignKey(User, null=True, on_delete=models.SET_NULL, related_name='user')
     name = models.CharField(max_length=50)
     description = models.CharField(max_length=150)
