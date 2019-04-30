@@ -79,21 +79,59 @@
                 {#                        <button type="submit" class="r" k="{{ e.id }}">send</button>#}
                 {#                    {% endif %}#}
                 {#                {% endif %}#}
-                {% if e.private == 0%}
+                {#                {% if e.private == 0%}#}
+                {##}
+                {#                    {% if sent == 1 %}#}
+                {#                        {% if sentreq.status %}#}
+                {#                            Going#}
+                {#                        {% else %}#}
+                {#                            Pending#}
+                {#                        {% endif %}#}
+                {##}
+                {#                    {% elif sent == 0 %}#}
+                {#                        <button type="submit" class="r" k="{{ e.id }}">send</button>#}
+                {#                    {% else %}#}
+                {#                        You are an admin of this event#}
+                {#                    {% endif %}#}
+                {#                {% endif %}#}
+                {% if e.private == 1 %}
 
-                    {% if sent == 1 %}
-                        {% if sentreq.status %}
-                            Going
-                        {% else %}
-                            Pending
-                        {% endif %}
-
-                    {% elif sent == 0 %}
-                        <button type="submit" class="r" k="{{ e.id }}">send</button>
-                    {% else %}
-                        You are an admin of this event
+                    This is a private event
+                {% else %}
+                    {% if flag == 1 %}
+                        <button class="r" type='submit' k='{{ e.id }}'>Send request</button>
+                        <p id="write"></p>
                     {% endif %}
                 {% endif %}
+                {% if admin_flg == 1 %}
+                    You are the admin of this event
+                {% elif mem_flg == 1 %}
+                    You are already a member of this event
+                {% elif inv_flg == 1 %}
+                    You have an invite for this event:
+                    <ul>
+                        {% for i in event_invites %}
+                            {% if i.status == False %}
+                                <li>
+                                    {{ i.event.name }}<br>
+                                    Admin: {{ i.event.user }}<br>
+                                    has invited you<br>
+
+                                    <p class="accept_inv" id="acc-inv-write" acc-inv="{{ i.id }}"><u id="rem1-inv">Accept
+                                        this invitation</u></p>
+
+                                    <p class="decline_inv" id="dec-inv-write" dec-inv="{{ i.id }}"><u id="rem2-inv">Decline
+                                        this invitation</u></p>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+
+                {% elif req_flg == 1 %}
+                    Request is on its way !
+                {% endif %}
+
+
             </td>
         </tr>
     </table>
@@ -161,7 +199,6 @@
     <script>
         $(".r").click(function () {
             console.log('jndalknl')
-            let td = $(this).parent();
             $.ajax({
                 type: 'POST',
                 url: '{% url "events:send" %}',
@@ -170,9 +207,62 @@
                     id: $(this).attr("k"),
                 },
                 success: function (data) {
-                    console.log('ljsdmlfm')
-                    $(this).remove();
-                    $(td).html(data);
+                    $("#write").html(data);
+                    $(".r").remove()
+                },
+
+                error: function (jqXHR, textStatus, errorThrown) {
+                    alert(errorThrown);
+                }
+
+            });
+        });
+        $(".accept_inv").click(function () {
+            console.log('jskdnfls');
+            let li = $(this).parent();
+            $.ajax({
+                type: 'POST',
+                url: '/events/accept-invite/',
+                data: {
+                    //csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
+                    csrfmiddlewaretoken: '{{ csrf_token }}',
+                    req: $(this).attr("acc-inv"),
+                },
+                success: function (data) {
+                    {#$("#rem1").remove();#}
+                    {#$("#rem2").remove();#}
+                    {#                    $("#acc-write").append(data);#}
+
+                    $(li).html(data);
+
+                },
+
+                error: function (jqXHR, textStatus, errorThrown) {
+                    alert(errorThrown);
+                }
+
+            });
+        });
+
+
+        $(".decline_inv").click(function () {
+            console.log('jskdnfls');
+            let li = $(this).parent();
+            $.ajax({
+                type: 'POST',
+                url: '/events/decline-invite/',
+                data: {
+                    //csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
+                    csrfmiddlewaretoken: '{{ csrf_token }}',
+                    req: $(this).attr("dec-inv"),
+                },
+                success: function (data) {
+                    {#$("#rem1").remove();#}
+                    {#$("#rem2").remove();#}
+                    {#                    $("#acc-write").append(data);#}
+
+                    $(li).html(data);
+
                 },
 
                 error: function (jqXHR, textStatus, errorThrown) {
