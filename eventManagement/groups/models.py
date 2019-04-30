@@ -17,7 +17,7 @@ class Group_invite(models.Model):
 
     group = models.ForeignKey(Group, null=True, on_delete=models.CASCADE)
     to = models.ForeignKey(User, related_name="invitedtogroup",null=True,  blank=True, on_delete=models.CASCADE)
-    status = models.BooleanField(default=False)
+    status = models.IntegerField(default=0)
 
     def __str__(self):
         return self.group.name + " " + self.to.username

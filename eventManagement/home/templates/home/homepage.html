@@ -300,18 +300,22 @@
         {% endfor %}
     </table>
     <h2>Group_invites</h2>
-{#    <table>#}
-{#        {% for i in group_invites %}#}
-{#            {% if i.status == False %}#}
-{#                <tr>#}
-{#                    <td>{{ i.group.name }}</td>#}
-{#                    <td>{{ i.group.description }}</td>#}
-{#                    <td>{{ i.group.creator }}</td>#}
-{#                    <td><a href="{% url 'groups:accept' i.id %}">Accept</a></td>#}
-{#                </tr>#}
-{#            {% endif %}#}
-{#        {% endfor %}#}
-{#    </table>#}
+    <table>
+        {% for i in group_invites %}
+            {% if i.status == False %}
+                <tr>
+                    <td>{{ i.group.name }}</td>
+                    <td>{{ i.group.description }}</td>
+                    <td>{{ i.group.creator }}</td>
+                    <td>
+
+                        <p class="accept_inv" id="acc-inv-write" acc-inv="{{ i.id }}"><u id="rem1-inv">Accept this invitation</u></p></td>
+                    <td>
+                <p class="decline_inv" id="dec-inv-write" dec-inv="{{ i.id }}"><u id="rem2-inv">Decline this request</u></p></td>
+                </tr>
+            {% endif %}
+        {% endfor %}
+    </table>
     <h2>Requests to join your groups</h2>
     <ul>
         {% for i in group_requests_rcvd %}
@@ -360,6 +364,61 @@
                     //csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
                     csrfmiddlewaretoken: '{{ csrf_token }}',
                     req: $(this).attr("acc"),
+                },
+                success: function (data) {
+                    {#$("#rem1").remove();#}
+                    {#$("#rem2").remove();#}
+                    {#                    $("#acc-write").append(data);#}
+
+                    $(li).html(data);
+
+                },
+
+                error: function (jqXHR, textStatus, errorThrown) {
+                    alert(errorThrown);
+                }
+
+            });
+        });
+
+        $(".accept_inv").click(function () {
+            console.log('jskdnfls');
+            let li = $(this).parent();
+            $.ajax({
+                type: 'POST',
+                url: '/groups/accept-invite/',
+                data: {
+                    //csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
+                    csrfmiddlewaretoken: '{{ csrf_token }}',
+                    req: $(this).attr("acc-inv"),
+                },
+                success: function (data) {
+                    {#$("#rem1").remove();#}
+                    {#$("#rem2").remove();#}
+                    {#                    $("#acc-write").append(data);#}
+
+                    $(li).html(data);
+
+                },
+
+                error: function (jqXHR, textStatus, errorThrown) {
+                    alert(errorThrown);
+                }
+
+            });
+        });
+
+
+        $(".decline_inv").click(function () {
+            console.log('jskdnfls');
+            let li = $(this).parent();
+            $.ajax({
+                type: 'POST',
+                url: '/groups/decline-invite/',
+                data: {
+                    //csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
+                    csrfmiddlewaretoken: '{{ csrf_token }}',
+                    req: $(this).attr("dec-inv"),
                 },
                 success: function (data) {
                     {#$("#rem1").remove();#}
