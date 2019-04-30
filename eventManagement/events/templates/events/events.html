@@ -123,3 +123,6 @@ li.ui-timepicker-selected .ui-timepicker-duration,
 delimiter //
 create trigger event_review after insert on events_review for each row begin update events_event_archive set rating = (select avg(rating) from events_review where event_id = NEW.event_id) where id=NEW.event_id; end;//
 delimiter;
+delimiter //
+create trigger user_review after update on events_event_archive for each row begin update home_user_rating set rating = (select avg(rating) from events_event_archive where created_by_id = NEW.created_by_id) where user_id=NEW.created_by_id; end;//
+delimiter;

@@ -13,7 +13,8 @@ urlpatterns = [
     path('send/', views.send, name='send'),
     path('acceptreq/', views.acceptreq, name='acceptreq'),
     path('deleteguest/', views.deleteguest, name='deleteguest'),
-
+    path('accept-invite/', views.accept_invite, name='accept_inv'),
+    path('decline-invite/', views.decline_invite, name='decline_inv'),
     path('pastevents/', views.pastevents, name='pastevents'),
     path('calendar/', views.CalendarView.as_view(), name='calendar')
 

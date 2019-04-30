@@ -83,7 +83,7 @@ def accept_invite(request):
             # cursor.execute("INSERT INTO groups_group_members (group_id, user_id) VALUES( %s , %s )",
             #                [group.group_id, group.to_id])
             cursor.close()
-    return render(request, "groups/invitation.html", {'user': to, 'grp': grp, 'message': 'accepted'})
+    return render(request, 'events/reqaccept.html')
 
 
 @login_required(login_url="/accounts/login")
