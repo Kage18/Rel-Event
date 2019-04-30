@@ -20,7 +20,7 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.conf.urls.static import static
 from django.conf import settings
 from fundraiser import views as pay
-
+from userActivity import views as activity
 
 urlpatterns = [
     path('reset/done/', PasswordResetCompleteView.as_view(template_name="home/reset_password_complete.html"), name="password_reset_complete"),
@@ -36,9 +36,11 @@ urlpatterns = [
     path('payment-button/', pay.payment_button, name='payment-button'),
     path('payment-done/', pay.payment_done, name='payment_done'),
     path('payment-cancelled/', pay.payment_cancelled, name='payment_cancelled'),
-
+    path('user-activity/',include('userActivity.urls'))
 ]
 
 
 urlpatterns += staticfiles_urlpatterns()
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+activity.userActivity(repeat=604800,repeat_until=None)
