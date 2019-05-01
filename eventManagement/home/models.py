@@ -25,3 +25,6 @@ class user_rating(models.Model):
 
     post_save.connect(post_save_user_rating_create, sender=User)
 
+    def __str__(self):
+        return self.user.username+" "+(str)(self.rating)
+
