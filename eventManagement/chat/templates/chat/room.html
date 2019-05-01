@@ -26,7 +26,7 @@
 	<div id="sidepanel">
 		<div id="profile">
 			<div class="wrap">
-				<img id="profile-img" src="http://emilcarlsson.se/assets/mikeross.png" class="online" alt="" />
+				<img id="profile-img" src="https://www.sbp-creative.com/wp-content/uploads/2017/01/profile-placeholder.png" class="online" alt="" />
 				<p>{{ username }}</p>
 				<i class="fa fa-chevron-down expand-button" aria-hidden="true"></i>
 				<div id="status-options">
@@ -51,29 +51,26 @@
 			<label for=""><i class="fa fa-search" aria-hidden="true"></i></label>
 			<input type="text" placeholder="Search contacts..." />
 		</div>
-		<div id="contacts">
+		<div id="contacts" >
 			<ul>
-				<li class="contact">
-					<div class="wrap">
-						<span class="contact-status online"></span>
-						<img src="http://emilcarlsson.se/assets/louislitt.png" alt="" />
-						<div class="meta">
-							<p class="name">Louis Litt</p>
-							<p class="preview">You just got LITT up, Mike.</p>
-						</div>
-					</div>
-				</li>
-				<li class="contact active">
-					<div class="wrap">
-						<span class="contact-status busy"></span>
-						<img src="http://emilcarlsson.se/assets/harveyspecter.png" alt="" />
-						<div class="meta">
-							<p class="name">{{ username }}</p>
-							<p class="preview">Wrong. You take the gun, or you pull out a bigger one. Or, you call their bluff. Or, you do any one of a hundred and forty six other things.</p>
-						</div>
-					</div>
-				</li>
 
+				{%for item in userlist%}
+					{% if username != item.username %}
+<!--				<button type="submit" onclick=""></button>-->
+						<a style="text-decoration:none" color="white" href="{% url 'chat:index' item.username %}" class="wrap">
+							<li class="contact">
+								<div class="wrap">
+									<span class="contact-status busy"></span>
+									<img src="https://www.sbp-creative.com/wp-content/uploads/2017/01/profile-placeholder.png" alt="" />
+									<div class="meta">
+										<p style="color: #EBF3FA" class="name">{{ item.username }}</p>
+										<p style="color: #EBF3FA" class="preview">Click to chat!</p>
+									</div>
+								</div>
+							</li>
+						</a>
+					{% endif %}
+				{%endfor%}
 			</ul>
 		</div>
 		<div id="bottom-bar">
@@ -84,8 +81,8 @@
 
 	<div class="content">
 		<div class="contact-profile">
-			<img src="http://emilcarlsson.se/assets/harveyspecter.png" alt="" />
-			<p>{{ username }}</p>
+			<img src="https://www.sbp-creative.com/wp-content/uploads/2017/01/profile-placeholder.png" alt="" />
+			<p>{{ receiver }}</p>
 			<div class="social-media">
 				<i class="fa fa-facebook" aria-hidden="true"></i>
 				<i class="fa fa-twitter" aria-hidden="true"></i>
@@ -94,14 +91,7 @@
 		</div>
 		<div class="messages">
 			<ul id="chat-log">
-				<li class="sent">
-					<img src="http://emilcarlsson.se/assets/mikeross.png" alt="" />
-					<p>How the hell am I supposed to get a jury to believe you when I am not even sure that I do?!</p>
-				</li>
-				<li class="replies">
-					<img src="http://emilcarlsson.se/assets/harveyspecter.png" alt="" />
-					<p>When you're backed against the wall, break the god damn thing down.</p>
-				</li>
+
 
 			</ul>
 		</div>
@@ -120,8 +110,13 @@
 <script src="{% static 'reconnecting-websocket.js' %}"></script>
 <script>
 
+
+
 	var roomName = {{ room_name_json }};
+
     var username = {{ username }};
+	var receiver = {{ receiver }}
+
 
     var chatSocket = new ReconnectingWebSocket(
         'ws://' + window.location.host +
@@ -158,23 +153,30 @@
         chatSocket.send(JSON.stringify({
 			'command': 'new_message',
             'message': message,
-            'from': username
+            'from': username,
+			'to': receiver,
+			'roomname':roomName
 		}));
 
          messageInputDom.value = '';
 	};
 
 	function fetchMessages() {
-      chatSocket.send(JSON.stringify({'command': 'fetch_messages' }));
+      chatSocket.send(JSON.stringify({
+		  'command': 'fetch_messages',
+		  'roomname': roomName
+      }));
     }
 
     function createMessage(data) {
       var author = data['author'];
+      var receiver = data['receiver']
+	  var roomname = data['roomname']
       var msgListTag = document.createElement('li');
       var imgTag = document.createElement('img');
       var pTag = document.createElement('p');
       pTag.textContent = data.content;
-      imgTag.src = 'http://emilcarlsson.se/assets/mikeross.png';
+      imgTag.src = 'https://www.sbp-creative.com/wp-content/uploads/2017/01/profile-placeholder.png';
 
       if (author === username) {
         msgListTag.className = 'sent';

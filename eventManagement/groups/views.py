@@ -204,3 +204,4 @@ def decline_req(request):
             return render(request, "groups/request_acc.html", {'message':'Error occured'})
 
 
+

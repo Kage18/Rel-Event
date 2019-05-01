@@ -18,6 +18,7 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.template.loader import render_to_string
 from .tokens import account_activation_token
 from django.core.mail import EmailMessage
+from home.models import *
 from django.http import Http404
 
 
@@ -40,7 +41,7 @@ def index(request):
 @login_required(login_url="/home/login")
 def dashboard(request):
     events = event.objects.raw("select * from events_event")
-
+    groups = Group.objects.filter(members=request.user)
     invites = invitation.objects.raw("select * from events_invitation where to_id = %s and status = %s",[request.user.id,0])
     group = Group.objects.raw("select * from groups_Group")
 
@@ -57,13 +58,17 @@ def dashboard(request):
     eventrequest = eventreq.objects.raw(
         "select * from events_eventreq where event_id in (select id from events_event where user_id = %s) and status = %s",
         [request.user.id, 'False'])
+    myevents = event.objects.filter(user=request.user)
 
-    return render(request, 'home/homepage.html',
+    attending_ev = regUser.objects.filter(user=request.user)
+    rating = user_rating.objects.get(user=request.user)
+    past_events = event_archive.objects.all()
+    print(attending_ev)
+    return render(request, 'home/test.html',
                   {'events': events, 'invites': invites,'group_invites': group_invites,
                    'sent_group_requests': sent_group_requests,
                    'send_group_request': send_requests_group, 'group_requests_rcvd': group_requests_rcvd,
-                   'eventreq': eventrequest})
-
+                   'eventreq': eventrequest,'groups':groups,'myevents':myevents,'attending_ev':attending_ev,'past_events':past_events,'rating':rating})
 
 
 def signup_view(request):
