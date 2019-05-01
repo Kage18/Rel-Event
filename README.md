@@ -1,20 +1,26 @@
 # SocialCircleEvents
 All required packages are in the requirements.txt file
 
-To install the packages,please do the following:(following steps are valid for ubuntu)
+To install the packages,do the following:
+(Steps valid for ubuntu systems)
 
-Create a virtualenv by using the command: 
-    
-    python3 -m virtualenv 
-If virtualenv is not present, install it by using the command, 
+Install virtual environment(if not present already):
     
     sudo pip3 install virtualenv
+     
+Create a virtualenv by using the command:
     
-Activate it by the command: source <path_to_environment>/bin/activate
+    python3 -m virtualenv
+    
+Activate venv by using the command:
+
+    source <path_to_environment>/bin/activate
+    
+Install requirements for the project by running the command:
     
     pip install -r requirements.txt
 
-For Windows, use the equivalent windows commands
+For Windows, equivalent commands to set up virtual environment and install requirements can be used.
 
 To run the project do the following:
 
@@ -31,7 +37,7 @@ To run the project do the following:
                     }
                 }
 
-2. Activate the virtualenv and open the project directly in the terminal and write the following commands
+2. Activate the virtualenv(if not already activated) and open the project directory in the terminal and write the following commands
 
         python manage.py makemigrations
         python manage.py migrate
