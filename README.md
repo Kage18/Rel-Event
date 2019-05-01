@@ -26,9 +26,9 @@ To run the project do the following:
 
 2. Activate the virtualenv and open the project directly in the terminal and write the following commands
 
-    -- python manage.py makemigrations
-    -- python manage.py migrate
+        python manage.py makemigrations
+        python manage.py migrate
 
 3. Run the project by the command
 
-    -- python manage.py runserver
+        python manage.py runserver
