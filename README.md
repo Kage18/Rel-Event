@@ -13,17 +13,16 @@ To run the project do the following:
 
 1. Configure your MySQL database NAME, USER, PASSWORD inside eventManagement > settings.py
 
-            DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': '---',
-        'USER': '---',
-        'PASSWORD': '----',
-        'HOST': 'localhost',   # Or an IP Address that your DB is hosted on
-        'PORT': '3306',
-    }
-
-}
+            DATABASES = {   
+                'default': {
+                    'ENGINE': 'django.db.backends.mysql',
+                    'NAME': '---',
+                    'USER': '---',
+                    'PASSWORD': '----',
+                    'HOST': 'localhost',   # Or an IP Address that your DB is hosted on
+                    'PORT': '3306',
+                    }
+                }
 
 2. Activate the virtualenv and open the project directly in the terminal and write the following commands
 
