@@ -1,7 +1,8 @@
 # SocialCircleEvents
 All required packages are in the requirements.txt file
 
-To install the packages,please do the following:(The below steps are for Ubuntu)
+To install the packages,please do the following:(following steps are valid for ubuntu)
+
 Create a virtualenv by using the command: 
     
     python3 -m virtualenv 
