@@ -171,7 +171,7 @@ def accept_invite(request):
     if request.method == 'POST':
         req = request.POST['req']
         invite = invitation.objects.get(id=req)
-        event = invite.event
+        ev = invite.event
         to = invite.to
 
         with connection.cursor() as cursor:
@@ -180,7 +180,7 @@ def accept_invite(request):
             # cursor.execute("INSERT INTO groups_group_members (group_id, user_id) VALUES( %s , %s )",
             #                [group.group_id, group.to_id])
             cursor.close()
-    return render(request, "events/invitation.html", {'user': to, 'grp': event, 'message': 'accepted'})
+    return render(request, "events/invitation.html", {'user': to, 'event': ev, 'message': 'accepted'})
 
 
 @login_required(login_url="/accounts/login")
@@ -188,13 +188,16 @@ def decline_invite(request):
     if request.method == 'POST':
         req = request.POST['req']
         invite = invitation.objects.get(id=req)
+        to = invite.to
+        ev = invite.event
         with connection.cursor() as cursor:
             cursor.execute("delete from events_invitation WHERE id = %s", [req])
             # group = Group_invite.objects.raw('select * from groups_group_invite where id = %s', [req])[0]
             # cursor.execute("INSERT INTO groups_group_members (group_id, user_id) VALUES( %s , %s )",
             #                [group.group_id, group.to_id])
             cursor.close()
-    return render(request, "events/invitation.html", {'message': 'declined'})
+    return render(request, "events/invitation.html", {'user':to,'event':ev,'message': 'declined'})
+
 
 
 def PastEventDetails(request, pk):
@@ -250,14 +253,28 @@ def send(request):
 def acceptreq(request):
     if request.POST:
         pk = request.POST["pk"]
+        user = eventreq.objects.get(id=pk).by
+        event = eventreq.objects.get(id=pk).event
         with connection.cursor() as cursor:
             cursor.execute("UPDATE events_eventreq SET status = %s WHERE id = %s", [1, pk])
             # req = eventreq.objects.raw('select * from events_eventreq where id = %s', [pk])[0]
             # cursor.execute("INSERT INTO events_event_registered_users(event_id, user_id) VALUES( %s , %s )",
             #                [req.event_id, req.by_id])
             cursor.close()
-        return render(request, 'events/reqaccept.html')
+        return render(request, 'events/reqaccept.html',{'user':user,'event':event,'message':'accepted'})
 
+def deletereq(request):
+    if request.POST:
+        pk = request.POST["pk"]
+        user = eventreq.objects.get(id=pk).by
+        event = eventreq.objects.get(id=pk).event
+        with connection.cursor() as cursor:
+            cursor.execute("UPDATE events_eventreq SET status = %s WHERE id = %s", [2, pk])
+            # req = eventreq.objects.raw('select * from events_eventreq where id = %s', [pk])[0]
+            # cursor.execute("INSERT INTO events_event_registered_users(event_id, user_id) VALUES( %s , %s )",
+            #                [req.event_id, req.by_id])
+            cursor.close()
+        return render(request, 'events/reqaccept.html',{'user':user,'event':event,'message':'declined'})
 
 def deleteguest(request):
     if request.POST:
@@ -295,5 +312,26 @@ def comment(request):
 def pastevents(request):
     # past_event = event_archive.objects.raw('SELECT * FROM events_event_archive')
     past_event = event_archive.objects.all()
-    print(past_event)
-    return render(request, 'events/pastevents.html', {'pevent': past_event})
+    print('----------------------------\n',past_event)
+    return render(request, 'events/pasteventdetail.html', {'pevent': past_event})
+
+def add_product(request, pk):
+    events = event.objects.filter(pk=pk)
+    # print(events.name)
+    context = {
+        'event' : events,
+    }
+    return render(request, 'events/product_form.html', context)
+
+def product_form(request, pk):
+    events = event.objects.get(pk=pk)
+    print(events)
+    name = request.POST.get('pname')
+    desc = request.POST.get('desc')
+    price = request.POST.get('price')
+    image = request.POST.get('image')
+    prod = Product.objects.get_or_create(name=name, description=desc, price=price, image=image)
+    print(prod)
+    events.product.add(prod[0])
+    # return render(request, 'events/details.html')
+    return redirect('events:details', pk=pk)

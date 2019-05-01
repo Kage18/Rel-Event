@@ -10,7 +10,7 @@ from django.shortcuts import render, HttpResponse
 from background_task import background
 
 
-@background(schedule=5)
+@background(schedule=1)
 def userActivity():
     users = User.objects.all()[1:]
     inactive = User.objects.none()

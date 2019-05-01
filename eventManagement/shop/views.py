@@ -35,7 +35,7 @@ def get_user_pending_order(request):
         return order[0]
     return 0
 
-@login_required(login_url='/home/login/')
+@login_required(login_url='/shop/login/')
 def index(request):
     user1 = get_object_or_404(User, username=request.user)
     # event_list = event.objects.filter(registered_users=user1)
@@ -89,7 +89,7 @@ def logout_view(request):
     return render(request, 'shop/index.html', {'all_medicines': all_products})
 
 
-@login_required(login_url='/home/login/')
+@login_required(login_url='/shop/login/')
 def add_to_cart(request, **kwargs):
     user_profile1 = get_object_or_404(User, username=request.user)
     product = Product.objects.filter(id=kwargs.get('product_id', "")).first()
@@ -150,7 +150,10 @@ def checkout(request, order_id):
 
 
 def finalPrice(request, order_id):
+
     order_to_purchase = Order.objects.filter(pk=order_id)
+    # query = request.GET.get()
+    # print(query)
     # order_to_purchase.is_ordered = True
 
     context = {
@@ -158,8 +161,24 @@ def finalPrice(request, order_id):
     }
     return render(request, 'shop/order.html', context)
 
+def send(request):
+    if request.POST:
+        id = request.POST['id']
+        quantity = request.POST.get('qq')
+        print(quantity)
+        Prod = PurchaseItem.objects.filter(pk=id)
+        print(Prod)
+        Prod.update(quantity=quantity)
+        # Prod.save()
+        print(id)
+        context = {
+            'product' : Prod
+        }
+        return render(request, 'shop/send.html', context)
 
-@login_required(login_url='/home/login')
+
+
+@login_required(login_url='/shop/login')
 def order_details(request, **kwargs):
     existing_order = get_user_pending_order(request)
     context = {
@@ -188,11 +207,12 @@ def order_details(request, **kwargs):
 #     return render(request, 'med/order_checked.html', context)
 
 
-@login_required(login_url='/home/login')
+@login_required(login_url='/shop/login')
 def checked(request, **kwargs):
     user_profile1 = get_object_or_404(User, username=request.user)
 
     order = Order.objects.filter(user=user_profile1, is_ordered=True)
+    order.update()
     context = {
         'order': order
     }
@@ -202,6 +222,9 @@ def checked(request, **kwargs):
 
 def get_registered_events(request):
     events_registered = event.objects.filter(user_name=request.user)
+
+
+
 
 #def my_profile(request):
 #	my_user_profile = UserProfile.objects.filter(user=request.user).first()

@@ -1,8 +1,19 @@
 {% extends 'home/base.html' %}
 {% load crispy_forms_tags %}
+{% block head %}
+    <style>
+    body{
+        background-image: url("https://www.freegreatpicture.com/files/photo63/31339-wwf-world-wide-fund-for-nature-wwf-psas-wallpaper.jpg");
+
+        background-size: cover;
+    }
+        </style>
+{% endblock %}
+
 {% block body %}
 <br><br><br><br><br><br><br>
- <div class="container" style="width:100%">
+    <div class="panel panel-primary" style="width:650px; margin-left: 120px">
+ <div class="container" style="width:600px">
     <p style="color:#1D466A; font-size: 35px; font-weight: bold; text-align: center; letter-spacing: 2px">Start A Fundraiser</p>
     <br>
     {% if form.errors %}

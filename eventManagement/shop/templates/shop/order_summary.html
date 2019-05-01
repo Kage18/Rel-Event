@@ -28,8 +28,10 @@
             </span>
           </td>
           <td>{{ item.product.price }}</td>
-        <td>{{ item.quantity }}</td>
-{#        <td>{{ item.medicine.pres_req }}</td>#}
+{#        <td>{{ item.quantity }}</td>#}
+            <td><input type="number" class="r" k="{{ item.id }}" value="{{ item.quantity }}" name="qq" required placeholder="Quantity" min="0" style="width: 100px; text-align: center">
+            <a href="{% url 'shop:order_summary' %}">change</a></td>
+            {#        <td>{{ item.medicine.pres_req }}</td>#}
         </tr>
         {% empty %}
         <tr style="background-color:white">
@@ -64,4 +66,30 @@
  </section>
 </div>
     <br>
+    {% csrf_token %}
+    <script>
+        $(".r").click(function () {
+            console.log('jndalknl')
+            let td = $(this).parent();
+            $.ajax({
+                type: 'POST',
+                url: '{% url "shop:send" %}',
+                data: {
+                    csrfmiddlewaretoken: '{{ csrf_token }}',
+                    id: $(this).attr("k"),
+                    qq: $(this).val()
+                },
+                success: function (data) {
+                    console.log('ljsdmlfm')
+                    {#$(this).remove();#}
+                    $(this).html(data);
+                },
+
+                error: function (jqXHR, textStatus, errorThrown) {
+                    alert(errorThrown);
+                }
+
+            });
+        });
+    </script>
 {% endblock %}
