@@ -1,4 +1,4 @@
-# SocialCircleEvents
+# Rel-Event
 All required packages are in the requirements.txt file
 
 To install the packages,do the following:
